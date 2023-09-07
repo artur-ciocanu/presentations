@@ -2,7 +2,6 @@
 :revealjs_theme: sky
 :revealjs_transition: slide
 :imagesdir: images
-:customcss: css/presentation.css
 
 Enforce Contracts And Reduce Boilerplate +
  +
@@ -26,8 +25,8 @@ Hello everyone, my name is Artur and I work for Adobe Journey Optimizer. I've be
 Before we get started, I'd like to thank the organizers for giving me the opportunity to speak today and I want to thank the sponsors for making this event possible.
 --
 
-== Adobe Journey Optimizer
-
+== Background
+Adobe Journey Optimizer::
 * Cloud based solution
 * Personalized experiences at scale
 * Omni-channel
@@ -49,23 +48,66 @@ Here is quick overview of our current Edge Network. On the edge we have differen
 == The Mess
 image::confluence.jpg[width=600,height=500]
 
+[.notes]
+--
+Like most enterprises are go to solution for documenting architecture, onboarding and other engineering related processes, including integration details, is Confuence. We have Confluence pages that describe the data that is sent to Kafka. These pages are manually maintained by engineers. This is a very error prone process. Engineers are not always up to date with the latest changes and the documentation is not always accurate. This leads to a lot of confusion and frustration. 
+--
+
 == The Mess
 image::json.png[width=600,height=400]
+
+[.notes]
+--
+Some teams are using JSON Schema to document the payload that is sent over Kafka, however most of the time we see just some JSON samples in the WIKI and some tables with the field names and types. This is not very helpful for the consumers of the data. 
+--
 
 == The Mess
 image::aaron-blanco-tejedor-VBe9zj-JHBs-unsplash.jpg[width=600,height=400]
 
+[.notes]
+--
+This leads to pain, suffering and agony, since the only source of truth is the code that actually sends the data over the wire instead of the WIKI pages.
+--
+
 == The Mess
 image::confluence-json-example.png[width=700,height=400]
+
+[.notes]
+--
+Here is a quick example of a Conflunce page with some JSON sample.
+--
 
 == The Zen
 image::asyncapi.jpg[width=500,height=500]
 
+[.notes]
+--
+We are at an AsyncAPI conf so you might have guessed that the solution to our pain and suffering is AsyncAPI. It should be noted that at Adobe we are heavy users of OpenAPI, but for whatever reason AsyncAPI flew under the radar for some time.
+--
+
 == The Zen
 image::kafka.png[width=300,height=500]
 
+[.notes]
+--
+As I already mentioned we are heavy users of Kafka. It is our go to messaging solution, but we are considering using AsyncAPI in other places where teams are using RabbitMQ, AWS SQS, JMS, etc.
+--
+
 == The Zen
 image::heart.png[width=600,height=500]
+
+[.notes]
+--
+We love AsyncAPI, it helped my team and we intend to evangelize it within Adobe. 
+--
+
+== The Zen
+AsyncAPI killer features::
+- Human readable
+- Machine readable
+- Awesome tooling
+- Awesome community
+- Extremely extensible and flexible
 
 == The Zen
 image::asyncapi-docs.png[width=700,height=400]
