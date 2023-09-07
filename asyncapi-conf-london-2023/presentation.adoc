@@ -98,7 +98,7 @@ image::heart.png[width=600,height=500]
 
 [.notes]
 --
-We love AsyncAPI, it helped my team and we intend to evangelize it within Adobe. 
+We love AsyncAPI, it helped my team and we are actively evangelizing it within Adobe, we'll see how it goes :).
 --
 
 == The Zen
@@ -109,6 +109,57 @@ AsyncAPI killer features::
 - Awesome community
 - Extremely extensible and flexible
 
+[.notes]
+--
+Just like OpenAPI, AsyncAPI is human and machine readable. It has awesome tooling and an awesome community. It is extremely extensible and flexible. Being part of Linux Foundation is a huge plus. We can be confident that AsyncAPI will thrive and we can bet on it.
+--
+
 == The Zen
 image::asyncapi-docs.png[width=700,height=400]
 
+== Modelina
+image::ring-of-power.png[width=900,height=600]
+
+[.notes]
+--
+So far I have been talking about AsyncAPI, however one of the reason that AsyncAPI was so successful within our teams is due to Modelina. Modelina proved to be quite a versatile tool. As I mentioned we are using OpenAPI quite heavily along with OpenAPI Generator. What we really liked about Modelina is that we can use one code-gen tool for OpenAPI, JSON Schema, AsyncAPI, which means that we can standardize on one tool.
+--
+
+== Modelina
+Use cases::
+- Generate classes from OpenAPI for the REST API
+- Generate classes from AsyncAPI for Kafka publishing and consuming
+- Generate classes from JSON Schema to store them in document DBs like MongoDB or CosmosDB
+
+[.notes]
+--
+It is worth noting that while initially we intended to use Modelina just for AsyncAPI and Kafka we quickly realized that we can use it to automate code generation for our REST and data layer and use OpenAPI, JSON Schema and AsyncAPI as the source of truth. 
+--
+
+== Demo
+image::architecture.png[width=1000,height=600]
+
+[.notes]
+--
+To make sure we are on the same page, here is a quick diagram showing the services that we are going to use in the demo. We have a service that is publishing data to Kafka and another service that is consuming the data from Kafka.
+--
+
+== Demo - services
+Services::
+- Kotlin Producer App
+- Java Consumer App
+- Scala Consumer App
+
+== Demo - services
+Service structure::
+- `api/spec` - OpenAPI specification
+- `api/external-specs` - AsyncAPI specifications
+- `api/config` - code generation configuration
+
+[.notes]
+--
+It should be noted that this structure is NOT enforced in any way. It is just a convention that we are using. To help teams to the right thing we have a GitHub template repository that they can use to bootstrap their services.
+--
+
+== Demo - for real :)
+image::show-time.png[width=900,height=500]
