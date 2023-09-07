@@ -1,0 +1,72 @@
+= AsyncAPI and Modelina
+:revealjs_theme: sky
+:revealjs_transition: slide
+:imagesdir: images
+:customcss: css/presentation.css
+
+Enforce Contracts And Reduce Boilerplate +
+ +
+ +
+
+Artur Ciocanu +
+GitHub: @artur-ciocanu +
+Twitter: @artur_ciocanu
+
+== Introduction
+
+* Part of Adobe Journey Optimizer
+* In marktech for the last 8 years
+* Polyglot developer
+* Tech Lead and Architect for Adobe Journey Optimizer Edge Delivery
+
+[.notes]
+--
+Hello everyone, my name is Artur and I work for Adobe Journey Optimizer. I've been in the marktech technology space for the last 8 years.I'm a polyglot developer and architect for Adobe Journey Optimizer Edge Delivery.
+
+Before we get started, I'd like to thank the organizers for giving me the opportunity to speak today and I want to thank the sponsors for making this event possible.
+--
+
+== Adobe Journey Optimizer
+
+* Cloud based solution
+* Personalized experiences at scale
+* Omni-channel
+* Right content at the right time
+
+[.notes]
+--
+Before we delve into AsyncAPI and Modelina, I'd like to give you a bit of background about Adobe Journey Optimizer. Like many modern cloud solutions Adobe Journey Optimizer is based on a microservices architecture. We have quite a few applications running on the "edge". Running on the "edge" means that we are as close to our customer's customers as possible. To make sure that we deliver the right experience at the right time we need to ensure that "config" data like marketing campaigns, offers, and other business rules are available to our applications. Data is pushed from "hubs" to "edges" via Kafka.
+--
+
+== Edge Network
+image::edge-network.png[]
+
+[.notes]
+--
+Here is quick overview of our current Edge Network. On the edge we have different applications that are covering different use cases like: personalization, experimentation, Machine Learning, etc. All these applications are consuming config data tha is published via Kafka.
+--
+
+== The Mess
+image::confluence.jpg[width=600,height=500]
+
+== The Mess
+image::json.png[width=600,height=400]
+
+== The Mess
+image::aaron-blanco-tejedor-VBe9zj-JHBs-unsplash.jpg[width=600,height=400]
+
+== The Mess
+image::confluence-json-example.png[width=700,height=400]
+
+== The Zen
+image::asyncapi.jpg[width=500,height=500]
+
+== The Zen
+image::kafka.png[width=300,height=500]
+
+== The Zen
+image::heart.png[width=600,height=500]
+
+== The Zen
+image::asyncapi-docs.png[width=700,height=400]
+

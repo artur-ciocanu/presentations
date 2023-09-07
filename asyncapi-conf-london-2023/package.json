@@ -1,0 +1,16 @@
+{
+  "name": "asyncapi-conf-london-2023",
+  "version": "1.0.0",
+  "description": "RevealMD to display Markdown slides for AsyncAPI Conf London 2023",
+  "main": "index.js",
+  "scripts": {
+    "build": "asciidoctor-revealjs presentation.adoc -o index.html"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@asciidoctor/reveal.js": "^5.0.1",
+    "asciidoctor": "^3.0.2",
+    "reveal.js": "^4.5.0"
+  }
+}
