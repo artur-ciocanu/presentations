@@ -62,7 +62,7 @@ Some teams are using JSON Schema to document the payload that is sent over Kafka
 --
 
 == The Mess
-image::aaron-blanco-tejedor-VBe9zj-JHBs-unsplash.jpg[width=600,height=400]
+image::work-frustration.jpg[width=600,height=400]
 
 [.notes]
 --
@@ -153,7 +153,7 @@ Services::
 == Demo - services
 Service structure::
 - `api/spec` - OpenAPI specification
-- `api/external-specs` - AsyncAPI specifications
+- `api/external-specs` - AsyncAPI specifications, referenced from external repository
 - `api/config` - code generation configuration
 
 [.notes]
