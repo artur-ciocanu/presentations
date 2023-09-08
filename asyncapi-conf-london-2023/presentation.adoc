@@ -163,3 +163,25 @@ It should be noted that this structure is NOT enforced in any way. It is just a 
 
 == Demo - for real :)
 image::show-time.png[width=900,height=500]
+
+== Conclusion
+Lessons learned::
+- Small steps
+- Don't be afraid to ask for help
+- RTFM
+- Use boring technology
+- Give back
+
+[.notes]
+--
+To conclude, I'd like to share some lessons learned.
+- First of all, don't try to boil the ocean
+- Start small and iterate
+- Don't be afraid to ask for help. The AsyncAPI community is awesome and very helpful
+- RTFM, AsyncAPI just like OpenAPI uses JSON Schema, so before adopting any of these specifications it won't hurt to read the docs and ensure that you understand the basics and use the best practices
+- Use boring technology, there are a lot of awesome tools like Schema Registry, API Management Platforms, etc. For now we have sticked to simple tools like: Git, Convention over Configuration, using Git repo templates, and good old Makefiles for task automation, and it works great!
+- To be a good citizen we should give back to the community, it can be a PR, a blog post, a talk, a bug report, anything that will make the AsyncAPI and its ecosystem better.
+--
+
+== Thank you!
+
