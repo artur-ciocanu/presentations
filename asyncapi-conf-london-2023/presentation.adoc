@@ -137,9 +137,7 @@ It is worth noting that while initially we intended to use Modelina just for Asy
 --
 
 == Demo
-image::architecture.png[width=600,height=600]
- +
- +
+image::architecture.png[width=700,height=500]
 
 [.notes]
 --
@@ -182,8 +180,8 @@ To conclude, I'd like to share some lessons learned.
 - Don't be afraid to ask for help. The AsyncAPI community is awesome and very helpful
 - RTFM, AsyncAPI just like OpenAPI uses JSON Schema, so before adopting any of these specifications it won't hurt to read the docs and ensure that you understand the basics and use the best practices
 - Use boring technology, there are a lot of awesome tools like Schema Registry, API Management Platforms, etc. For now we have sticked to simple tools like: Git, Convention over Configuration, using Git repo templates, and good old Makefiles for task automation, and it works great!
-- To be a good citizen we should give back to the community, it can be a PR, a blog post, a talk, a bug report, anything that will make the AsyncAPI and its ecosystem better.
+- To be a good citizen we should give back to the community, it can be a PR, a blog post, a talk, a bug report, anything that will make the AsyncAPI and its ecosystem better. In our case we are planning to contribute our Scala code gen to Modelina and we are looking forward to contribute to Kotlin and Java code gen.
 --
 
 == Thank you!
-
+image::thanks.jpg[width=900,height=500]
