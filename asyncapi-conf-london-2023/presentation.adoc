@@ -137,7 +137,9 @@ It is worth noting that while initially we intended to use Modelina just for Asy
 --
 
 == Demo
-image::architecture.png[width=1000,height=600]
+image::architecture.png[width=600,height=600]
+ +
+ +
 
 [.notes]
 --
