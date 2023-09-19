@@ -154,12 +154,33 @@ Use cases::
 It is worth noting that while initially we intended to use Modelina just for AsyncAPI and Kafka we quickly realized that we can use it to automate code generation for our REST and data layer and use OpenAPI, JSON Schema and AsyncAPI as the source of truth. 
 --
 
+== Our recipe
+[.text-left]
+Ask "politely" :) the teams to start their service from a GitHub template repo.
+
+Service structure::
+- `api/spec` - OpenAPI specification
+- `api/external-specs` - AsyncAPI specifications, referenced from external repository
+- `api/config` - code generation configuration, used by Modelina tools
+
+[.notes]
+--
+It should be noted that this structure is NOT enforced in any way. It is just a convention that we are using. To help teams do the right thing we have a GitHub template repository that they can use to bootstrap their services.
+
+It is worth noting that while initially we intended to use Modelina just for AsyncAPI and Kafka we quickly realized that we can do much, much more.
+
+Like::
+- Generate classes for REST layer
+- Generate classes for Kafka communication
+- Generate classes from JSON schema for storing data into CosmosDB or MongoDB
+--
+
 == Demo
 image::architecture.png[width=700,height=500]
 
 [.notes]
 --
-To make sure we are on the same page, here is a quick diagram showing the services that we are going to use in the demo. We have a service that is publishing data to Kafka and another service that is consuming the data from Kafka.
+To make sure we are on the same page, here is a quick diagram showing the services that we are going to use in the demo. We have a service that is publishing data to Kafka and two others services that are consuming the data from Kafka.
 --
 
 == Demo - services
@@ -167,17 +188,6 @@ Services::
 - Kotlin Producer App
 - Java Consumer App
 - Scala Consumer App
-
-== Demo - services
-Service structure::
-- `api/spec` - OpenAPI specification
-- `api/external-specs` - AsyncAPI specifications, referenced from external repository
-- `api/config` - code generation configuration
-
-[.notes]
---
-It should be noted that this structure is NOT enforced in any way. It is just a convention that we are using. To help teams to the right thing we have a GitHub template repository that they can use to bootstrap their services.
---
 
 == Demo - for real :)
 image::show-time.png[width=900,height=500]
