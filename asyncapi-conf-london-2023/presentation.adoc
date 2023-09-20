@@ -133,7 +133,7 @@ Just like OpenAPI, AsyncAPI is human and machine readable. It has awesome toolin
 --
 
 == Enlightenment
-image::asyncapi-docs.png[width=700,height=400]
+image::asyncapi-docs.png[width=900,height=400]
 
 == Modelina
 image::ring-of-power.png[width=900,height=600]
@@ -155,24 +155,19 @@ It is worth noting that while initially we intended to use Modelina just for Asy
 --
 
 == Our recipe
-[.text-left]
-Ask "politely" :) the teams to start their service from a GitHub template repo.
-
-Service structure::
-- `api/spec` - OpenAPI specification
-- `api/external-specs` - AsyncAPI specifications, referenced from external repository
-- `api/config` - code generation configuration, used by Modelina tools
+Steps to success::
+- GitHub template repo
+- Centralized AsyncAPI repo
+- Modelina based tooling
 
 [.notes]
 --
-It should be noted that this structure is NOT enforced in any way. It is just a convention that we are using. To help teams do the right thing we have a GitHub template repository that they can use to bootstrap their services.
+After multiple iterations we have landed on a recipe that works for us. Where every new service that wants to communicate via Kafka has to follow these steps::
+- Start from a GitHub template repo
+- Create a new AsyncAPI specification and added to our central AsyncAPI repo
+- Use Modelina based tooling to generate all the scaffolding code
 
-It is worth noting that while initially we intended to use Modelina just for AsyncAPI and Kafka we quickly realized that we can do much, much more.
-
-Like::
-- Generate classes for REST layer
-- Generate classes for Kafka communication
-- Generate classes from JSON schema for storing data into CosmosDB or MongoDB
+Just by using these simple steps we have managed to decouple the services and ensure that we can evolve them independently.
 --
 
 == Demo
