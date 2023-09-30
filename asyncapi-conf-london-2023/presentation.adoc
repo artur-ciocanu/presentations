@@ -15,8 +15,8 @@ Twitter: @artur_ciocanu
 
 * Work for Adobe Journey Optimizer
 * In marktech for the last 8 years
-* Polyglot developer
 * Tech Lead and Architect for Adobe Journey Optimizer Edge Delivery
+* Interested in "Anything" as Code
 
 [.notes]
 --
