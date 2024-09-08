@@ -5,8 +5,8 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.core.format.ContentType;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.nats.client.ConsumerContext;
-import io.nats.client.JetStreamApiException;
 import io.nats.client.Message;
+import io.nats.client.MessageConsumer;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,8 +44,14 @@ public class DataCollectionService {
     }
 
     @PostConstruct
-    public void init() throws JetStreamApiException, IOException {
-        consumerContext.consume(this::processMessage);
+    public void init() {
+        try (MessageConsumer consumer = consumerContext.consume(this::processMessage)) {
+            LOGGER.info("Listening for messages");
+        } catch (Exception e) {
+            LOGGER.error("Failed to consume messages", e);
+
+            throw new RuntimeException("Failed to consume messages from NATS", e);
+        }
     }
 
     private void processMessage(Message message) {
