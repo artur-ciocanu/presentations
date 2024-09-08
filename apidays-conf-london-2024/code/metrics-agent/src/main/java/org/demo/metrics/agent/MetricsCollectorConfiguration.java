@@ -1,5 +1,7 @@
 package org.demo.metrics.agent;
 
+import io.cloudevents.core.format.ContentType;
+import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.nats.client.Connection;
 import io.nats.client.JetStream;
@@ -23,8 +25,8 @@ public class MetricsCollectorConfiguration {
     }
 
     @Bean
-    public EventFormatProvider eventFormatProvider() {
-        return EventFormatProvider.getInstance();
+    public EventFormat eventFormat() {
+        return EventFormatProvider.getInstance().resolveFormat(ContentType.JSON);
     }
 
     @Bean

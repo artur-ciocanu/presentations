@@ -1,5 +1,7 @@
 package org.demo.data.collection.service;
 
+import io.cloudevents.core.format.ContentType;
+import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.nats.client.*;
 import io.nats.client.api.AckPolicy;
@@ -38,7 +40,7 @@ public class DataCollectionServiceConfiguration {
     }
 
     @Bean
-    public EventFormatProvider eventFormatProvider() {
-        return EventFormatProvider.getInstance();
+    public EventFormat eventFormat() {
+        return EventFormatProvider.getInstance().resolveFormat(ContentType.JSON);
     }
 }

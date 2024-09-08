@@ -2,8 +2,7 @@ package org.demo.data.collection.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.core.format.ContentType;
-import io.cloudevents.core.provider.EventFormatProvider;
+import io.cloudevents.core.format.EventFormat;
 import io.nats.client.ConsumerContext;
 import io.nats.client.Message;
 import io.nats.client.MessageConsumer;
@@ -21,18 +20,18 @@ public class DataCollectionService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DataCollectionService.class);
     private final ConsumerContext consumerContext;
-    private final EventFormatProvider eventFormatProvider;
+    private final EventFormat eventFormat;
     private final ObjectMapper mapper;
 
     private final List<MetricsData> metricsList = new CopyOnWriteArrayList<>();
 
     public DataCollectionService(
             ConsumerContext consumerContext,
-            EventFormatProvider eventFormatProvider,
+            EventFormat eventFormat,
             ObjectMapper mapper
     ) {
         this.consumerContext = consumerContext;
-        this.eventFormatProvider = eventFormatProvider;
+        this.eventFormat = eventFormat;
         this.mapper = mapper;
     }
 
@@ -66,9 +65,7 @@ public class DataCollectionService {
     }
 
     private CloudEvent fromCloudEventBytes(byte[] data) {
-        return eventFormatProvider
-                .resolveFormat(ContentType.JSON)
-                .deserialize(data);
+        return eventFormat.deserialize(data);
     }
 
     private MetricsData fromMetricsDataBytes(byte[] data) {

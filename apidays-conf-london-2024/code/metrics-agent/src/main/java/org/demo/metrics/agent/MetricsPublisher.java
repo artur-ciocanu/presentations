@@ -3,8 +3,7 @@ package org.demo.metrics.agent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.core.format.ContentType;
-import io.cloudevents.core.provider.EventFormatProvider;
+import io.cloudevents.core.format.EventFormat;
 import io.cloudevents.core.v1.CloudEventBuilder;
 import io.nats.client.JetStream;
 import org.slf4j.Logger;
@@ -25,12 +24,12 @@ public class MetricsPublisher {
     private static final String TYPE = "metric";
 
     private final ObjectMapper mapper;
-    private final EventFormatProvider eventFormatProvider;
+    private final EventFormat eventFormat;
     private final JetStream jetStream;
 
-    public MetricsPublisher(ObjectMapper mapper, EventFormatProvider eventFormatProvider, JetStream jetStream) {
+    public MetricsPublisher(ObjectMapper mapper, EventFormat eventFormat, JetStream jetStream) {
         this.mapper = mapper;
-        this.eventFormatProvider = eventFormatProvider;
+        this.eventFormat = eventFormat;
         this.jetStream = jetStream;
     }
 
@@ -65,9 +64,7 @@ public class MetricsPublisher {
     }
 
     private byte[] serialize(CloudEvent cloudEvent) {
-        return eventFormatProvider
-            .resolveFormat(ContentType.JSON)
-            .serialize(cloudEvent);
+        return eventFormat.serialize(cloudEvent);
     }
 
     private byte[] serialize(MetricsData data) {
