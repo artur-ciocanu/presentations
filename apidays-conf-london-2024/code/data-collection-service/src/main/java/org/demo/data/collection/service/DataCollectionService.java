@@ -1,24 +1,30 @@
 package org.demo.data.collection.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.format.EventFormat;
-import io.nats.client.ConsumerContext;
-import io.nats.client.Message;
-import io.nats.client.MessageConsumer;
+import io.cloudevents.core.v1.CloudEventBuilder;
+import io.nats.client.*;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
 public class DataCollectionService {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(DataCollectionService.class);
+
+    private static final String TYPE = "metrics";
+    private static final String SUBJECT = "metrics.>";
+
+    private final Connection natsConnection;
     private final ConsumerContext consumerContext;
     private final EventFormat eventFormat;
     private final ObjectMapper mapper;
@@ -26,31 +32,23 @@ public class DataCollectionService {
     private final List<MetricsData> metricsList = new CopyOnWriteArrayList<>();
 
     public DataCollectionService(
+            Connection natsConnection,
             ConsumerContext consumerContext,
             EventFormat eventFormat,
             ObjectMapper mapper
     ) {
+        this.natsConnection = natsConnection;
         this.consumerContext = consumerContext;
         this.eventFormat = eventFormat;
         this.mapper = mapper;
     }
 
-    public List<MetricsData> getAllCollectedMetrics() {
-        // We use an in-memory list to store the metrics data
-        // This is just for demonstration purposes
-        // In a real-world scenario, you would store this data in a database
-        return metricsList;
-    }
-
     @PostConstruct
-    public void init() {
-        try (MessageConsumer consumer = consumerContext.consume(this::processMessage)) {
-            LOGGER.info("Listening for messages");
-        } catch (Exception e) {
-            LOGGER.error("Failed to consume messages", e);
+    public void init() throws JetStreamApiException, IOException {
+        consumerContext.consume(this::processMessage);
 
-            throw new RuntimeException("Failed to consume messages from NATS", e);
-        }
+        Dispatcher dispatcher = natsConnection.createDispatcher(this::publishAllMetrics);
+        dispatcher.subscribe("get-metrics");
     }
 
     private void processMessage(Message message) {
@@ -74,5 +72,36 @@ public class DataCollectionService {
         } catch (IOException e) {
             throw new RuntimeException("Could not deserialize metrics data", e);
         }
+    }
+
+    private void publishAllMetrics(Message message) {
+        CloudEvent cloudEvent = toCloudEvent(metricsList);
+        byte[] payload = serialize(cloudEvent);
+
+        natsConnection.publish(message.getReplyTo(), payload);
+    }
+
+    private CloudEvent toCloudEvent(List<MetricsData> metrics) {
+        byte[] dataBytes = serializeMetricsList(metrics);
+
+        return new CloudEventBuilder()
+                .withId(UUID.randomUUID().toString())
+                .withSubject(SUBJECT)
+                .withType(TYPE)
+                .withSource(URI.create("https://observability.acme.com/metrics"))
+                .withData(dataBytes)
+                .build();
+    }
+
+    private byte[] serializeMetricsList(List<MetricsData> metrics) {
+        try {
+            return mapper.writeValueAsBytes(metrics);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Can not serializer metrics list", e);
+        }
+    }
+
+    private byte[] serialize(CloudEvent cloudEvent) {
+        return eventFormat.serialize(cloudEvent);
     }
 }
