@@ -17,7 +17,7 @@ public class MetricsCollector {
         this.publisher = publisher;
     }
 
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(fixedRate = 5000)
     public void collectMetrics() {
        MetricsData metricsData = restClient.get().retrieve().body(MetricsData.class);
 

@@ -22,5 +22,11 @@ nats-server --jetstream
 ## Create a NATS JetStream stream
 In order to create a NATS JetStream stream, we will need to run the following command:
 ```bash
-nats stream add "METRICS" --subjects "metrics.>" --retention limits --max-msg-size 1MB --max-bytes 1GB --max-age 1d --storage memory --discard old
+nats stream add "METRICS" --subjects="metrics.>" --retention=limits --max-msg-size=1MB --max-bytes=1GB --max-age=1d --storage=memory --discard=old --replicas=1 --max-msgs=-1 --max-msgs-per-subject=-1 --dupe-window=2m0s --no-allow-rollup --deny-delete --deny-purge
+```
+
+## See NATS JetStream stream information
+In order to see the information about a NATS JetStream stream, we will need to run the following command:
+```bash
+nats stream info "METRICS"
 ```
