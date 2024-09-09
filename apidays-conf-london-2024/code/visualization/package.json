@@ -1,0 +1,12 @@
+{
+  "name": "visualization",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "www": "./node_modules/.bin/http-server -p 9090"
+  },
+  "dependencies": {
+    "http-server": "^14.1.1"
+  }
+}

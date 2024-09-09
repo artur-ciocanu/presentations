@@ -1,5 +1,6 @@
 package org.demo.reporting.service;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +16,7 @@ public class MetricsDataController {
     }
 
     @GetMapping("/metrics")
+    @CrossOrigin(origins = "http://localhost:9090")
     public List<MetricsData> getAllMetrics() {
         return reportingService.getAllMetrics();
     }

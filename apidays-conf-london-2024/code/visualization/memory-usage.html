@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+
+<head>
+  <script src="https://cdn.plot.ly/plotly-2.35.0.min.js" charset="utf-8"></script>
+  <script src="requestor.js"></script>
+</head>
+
+<body>
+  <div id="memory-usage-container"></div>
+  <script>
+    getMetricsData()
+      .then(data => {
+        const memoryUsageData = [{
+          x: data.map((d) => new Date(d.timestamp / 1000)),
+          y: data.map((d) => d.memoryUsage),
+          name: "Memory Usage (MB)",
+          type: "scatter"
+        }];
+
+        Plotly.newPlot("memory-usage-container", memoryUsageData, {
+          title: "Memory Usage Over Time",
+          xaxis: {title: "Time"},
+          yaxis: {title: "Memory Usage (MB)"}
+        }, {editable: false});
+      });
+  </script>
+</body>
+
+</html>

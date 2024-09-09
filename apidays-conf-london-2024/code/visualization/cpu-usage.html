@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+
+<head>
+  <script src="https://cdn.plot.ly/plotly-2.35.0.min.js" charset="utf-8"></script>
+  <script src="requestor.js"></script>
+</head>
+
+<body>
+  <div id="cpu-usage-container"></div>
+  <script>
+    getMetricsData()
+      .then(data => {
+        const cpuUsageData = [{
+          x: data.map((d) => new Date(d.timestamp / 1000)),
+          y: data.map((d) => d.cpuUsage),
+          name: "CPU Usage (%)",
+          type: "scatter"
+        }];
+
+        Plotly.newPlot("cpu-usage-container", cpuUsageData, {
+          title: "CPU Usage Over Time",
+          xaxis: {title: "Time"},
+          yaxis: {title: "CPU Usage (%)"}
+        }, {editable: false});
+      });
+  </script>
+</body>
+
+</html>
