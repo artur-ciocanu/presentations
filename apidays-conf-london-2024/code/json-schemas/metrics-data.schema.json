@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "title": "Metrics Data",
+  "description": "Metrics Data",
+  "type": "object",
+  "definitions": {
+    "metricsData": {
+      "type": "object",
+      "title": "Metrics Data",
+      "properties": {
+        "cpuUsage": {
+          "type": "integer"
+        },
+        "memoryUsage": {
+          "type": "integer"
+        },
+        "httpRequestCount": {
+          "type": "integer"
+        },
+        "timestamp": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "cpuUsage",
+        "memoryUsage",
+        "httpRequestCount",
+        "timestamp"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "$ref": "#/definitions/metricsData"
+    }
+  ]
+}

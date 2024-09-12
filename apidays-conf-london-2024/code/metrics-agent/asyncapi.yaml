@@ -1,0 +1,35 @@
+asyncapi: 3.0.0
+info:
+  title: Metrics Publishing API
+  version: 1.0.0
+  description: The API publishes metrics data to NATS
+
+servers:
+  localNatsServer:
+    host: localhost:4222
+    description: NATS server running on localhost
+    protocol: nats
+
+operations:
+  publishMetrics:
+    action: send
+    channel:
+      $ref: "#/channels/metrics"
+
+channels:
+  metrics:
+    description: This channel contains a message per group of metrics collected from the application
+    address: metrics
+    messages:
+      metricsMessage:
+        $ref: "#/components/schemas/metricsDataEnvelope"
+
+components:
+  schemas:
+    metricsDataEnvelope:
+      type: object
+      allOf:
+        - $ref: "https://raw.githubusercontent.com/cloudevents/spec/v1.0.1/spec.json"
+      properties:
+        data:
+          $ref: "../json-schemas/metrics-data.schema.json"

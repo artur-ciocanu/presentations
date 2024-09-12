@@ -1,0 +1,44 @@
+asyncapi: 3.0.0
+info:
+  title: Reporting Service API
+  version: 1.0.0
+  description: The API get a list of metrics from Data Collection Service over NATS using request/reply pattern
+
+servers:
+  localNatsServer:
+    host: localhost:4222
+    description: NATS server running on localhost
+    protocol: nats
+
+operations:
+  getMetrics:
+    action: send
+    channel:
+      $ref: "#/channels/get-metrics"
+    reply:
+      channel:
+        $ref: "#/channels/get-metrics-reply"
+
+channels:
+  get-metrics:
+    description: This channel returns is used to request data from Data Collection Service
+    address: get-metrics
+
+  get-metrics-reply:
+    description: This channel returns a list of collected metrics
+    address: "$message.header#/replyTo"
+    messages:
+      metricsMessage:
+        $ref: "#/components/schemas/listOfMetricsDataEnvelope"
+
+components:
+  schemas:
+    listOfMetricsDataEnvelope:
+      type: object
+      allOf:
+        - $ref: "https://raw.githubusercontent.com/cloudevents/spec/v1.0.1/spec.json"
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "../json-schemas/metrics-data.schema.json"
