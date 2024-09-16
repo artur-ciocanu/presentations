@@ -12,12 +12,13 @@ public class MetricsDataController {
     @GetMapping("/metrics")
     public MetricsData getMetricsData() {
         ThreadLocalRandom random = ThreadLocalRandom.current();
+        MetricsData result = new MetricsData();
 
-        return new MetricsData(
-                random.nextInt(20, 85),
-                random.nextInt(2048, 4096),
-                random.nextInt(300, 1000),
-                Instant.now().toEpochMilli()
-        );
+        result.setCpuUsage(random.nextInt(20, 85));
+        result.setMemoryUsage(random.nextInt(2048, 4096));
+        result.setHttpRequestCount(random.nextInt(300, 1000));
+        result.setTimestamp(Instant.now().toEpochMilli());
+
+        return result;
     }
 }

@@ -1,0 +1,14 @@
+{
+  "name": "data-collection-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "codegen": "node ./codegen/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@asyncapi/modelina": "^3.7.0"
+  }
+}
