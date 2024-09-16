@@ -25,12 +25,12 @@ public class MetricsPublisher {
 
     private final ObjectMapper mapper;
     private final EventFormat eventFormat;
-    private final JetStream jetStream;
+    private final JetStream nastJetStream;
 
-    public MetricsPublisher(ObjectMapper mapper, EventFormat eventFormat, JetStream jetStream) {
+    public MetricsPublisher(ObjectMapper mapper, EventFormat eventFormat, JetStream nastJetStream) {
         this.mapper = mapper;
         this.eventFormat = eventFormat;
-        this.jetStream = jetStream;
+        this.nastJetStream = nastJetStream;
     }
 
     public void publishMetrics(MetricsData data) {
@@ -43,7 +43,7 @@ public class MetricsPublisher {
         byte[] payload = serialize(cloudEvent);
 
         try {
-            jetStream.publish(SUBJECT, payload);
+            nastJetStream.publish(SUBJECT, payload);
         } catch (Exception e) {
             LOGGER.error("Failed to publish metrics", e);
 

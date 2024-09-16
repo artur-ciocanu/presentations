@@ -25,7 +25,7 @@ public class DataCollectionService {
     private static final String SUBJECT = "metrics.>";
 
     private final Connection natsConnection;
-    private final ConsumerContext consumerContext;
+    private final ConsumerContext natsConsumer;
     private final EventFormat eventFormat;
     private final ObjectMapper mapper;
 
@@ -33,22 +33,22 @@ public class DataCollectionService {
 
     public DataCollectionService(
             Connection natsConnection,
-            ConsumerContext consumerContext,
+            ConsumerContext natsConsumer,
             EventFormat eventFormat,
             ObjectMapper mapper
     ) {
         this.natsConnection = natsConnection;
-        this.consumerContext = consumerContext;
+        this.natsConsumer = natsConsumer;
         this.eventFormat = eventFormat;
         this.mapper = mapper;
     }
 
     @PostConstruct
     public void init() throws JetStreamApiException, IOException {
-        consumerContext.consume(this::processMessage);
+        natsConsumer.consume(this::processMessage);
 
-        Dispatcher dispatcher = natsConnection.createDispatcher(this::publishAllMetrics);
-        dispatcher.subscribe("get-metrics");
+        Dispatcher natsDispatcher = natsConnection.createDispatcher(this::publishAllMetrics);
+        natsDispatcher.subscribe("get-metrics");
     }
 
     private void processMessage(Message message) {
