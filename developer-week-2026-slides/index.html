@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One Schema to Rule Them All — Artur Ciocanu | DeveloperWeek 2026</title>
+  <link rel="stylesheet" href="vendor/revealjs/dist/reveal.css">
+  <link rel="stylesheet" href="vendor/revealjs/dist/theme/black.css" id="theme">
+  <link rel="stylesheet" href="vendor/revealjs/plugin/highlight/monokai.css">
+  <style>
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap; src: url('vendor/fonts/inter-400.woff2') format('woff2'); }
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap; src: url('vendor/fonts/inter-600.woff2') format('woff2'); }
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 700; font-display: swap; src: url('vendor/fonts/inter-700.woff2') format('woff2'); }
+    @font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400; font-display: swap; src: url('vendor/fonts/jetbrains-mono-400.woff2') format('woff2'); }
+    @font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 700; font-display: swap; src: url('vendor/fonts/jetbrains-mono-700.woff2') format('woff2'); }
+    @font-face { font-family: 'Virgil'; font-style: normal; font-weight: 400; font-display: swap; src: url('vendor/fonts/virgil.woff2') format('woff2'); }
+  </style>
+  <style>
+    /* ── Catppuccin Mocha Palette ── */
+    :root {
+      --ctp-base:     #1e1e2e;
+      --ctp-surface0:  #313244;
+      --ctp-surface1:  #45475a;
+      --ctp-overlay:   #6c7086;
+      --ctp-text:      #cdd6f4;
+      --ctp-subtext:   #a6adc8;
+      --ctp-teal:      #94e2d5;
+      --ctp-blue:      #89b4fa;
+      --ctp-pink:      #f38ba8;
+      --ctp-yellow:    #f9e2af;
+      --ctp-green:     #a6e3a1;
+      --ctp-mauve:     #cba6f7;
+      --ctp-peach:     #fab387;
+    }
+
+    /* ── Circuit-board background pattern ── */
+    .reveal {
+      background-color: var(--ctp-base);
+      background-image:
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M30 0v60M0 30h60' stroke='%23313244' stroke-width='0.5'/%3E%3Ccircle cx='30' cy='30' r='2' fill='%23313244'/%3E%3Ccircle cx='0' cy='0' r='1.5' fill='%23313244'/%3E%3Ccircle cx='60' cy='0' r='1.5' fill='%23313244'/%3E%3Ccircle cx='0' cy='60' r='1.5' fill='%23313244'/%3E%3Ccircle cx='60' cy='60' r='1.5' fill='%23313244'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    /* ── Base Typography ── */
+    .reveal, .reveal p, .reveal li, .reveal td {
+      font-family: 'Inter', sans-serif;
+      color: var(--ctp-text);
+      font-size: 52px;
+      line-height: 1.4;
+    }
+
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      color: var(--ctp-teal);
+      text-shadow: 0 0 30px rgba(148, 226, 213, 0.35), 0 0 60px rgba(148, 226, 213, 0.12);
+      text-transform: none;
+      letter-spacing: -0.02em;
+    }
+
+    .reveal h1 { font-size: 3.2em; line-height: 1.1; }
+    .reveal h2 { font-size: 2.4em; margin-bottom: 0.4em; }
+    .reveal h3 { font-size: 1.5em; color: var(--ctp-blue); }
+
+    .reveal code, .reveal pre code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .reveal pre {
+      width: 100%;
+      box-shadow: 0 0 30px rgba(137, 180, 250, 0.15);
+      border: 2px solid var(--ctp-surface1);
+      border-radius: 12px;
+    }
+
+    .reveal pre code {
+      padding: 0.6em 0.8em;
+      font-size: 0.38em;
+      line-height: 1.4;
+      max-height: 620px;
+      border-radius: 12px;
+    }
+
+    .reveal .slides section {
+      padding: 30px 50px;
+    }
+
+    /* ── Inline code ── */
+    .reveal code:not(.hljs) {
+      background: var(--ctp-surface0);
+      padding: 0.1em 0.35em;
+      border-radius: 6px;
+      font-size: 0.9em;
+      color: var(--ctp-blue);
+    }
+
+    /* ── Links ── */
+    .reveal a {
+      color: var(--ctp-blue);
+      text-decoration: none;
+      border-bottom: 2px solid rgba(137, 180, 250, 0.3);
+      transition: border-color 0.3s;
+    }
+    .reveal a:hover {
+      border-bottom-color: var(--ctp-blue);
+    }
+
+    /* ── Subtitle / subtext ── */
+    .subtitle {
+      color: var(--ctp-subtext);
+      font-size: 0.65em;
+      margin-top: 0.4em;
+    }
+    .conference-info {
+      color: var(--ctp-overlay);
+      font-size: 0.55em;
+      margin-top: 1.2em;
+    }
+
+    /* ── Accent utilities ── */
+    .accent-teal   { color: var(--ctp-teal); }
+    .accent-blue   { color: var(--ctp-blue); }
+    .accent-pink   { color: var(--ctp-pink); }
+    .accent-yellow { color: var(--ctp-yellow); }
+    .accent-green  { color: var(--ctp-green); }
+    .accent-mauve  { color: var(--ctp-mauve); }
+    .accent-peach  { color: var(--ctp-peach); }
+
+    .glow-teal { text-shadow: 0 0 20px rgba(148, 226, 213, 0.4); }
+    .glow-pink { text-shadow: 0 0 20px rgba(243, 139, 168, 0.4); }
+
+    /* ── Badge / pill styling ── */
+    .badge {
+      display: inline-block;
+      padding: 0.3em 0.8em;
+      border-radius: 24px;
+      font-size: 0.8em;
+      font-weight: 600;
+      margin: 0.2em;
+      border: 2px solid;
+    }
+    .badge-green  { background: rgba(166, 227, 161, 0.15); border-color: var(--ctp-green);  color: var(--ctp-green); }
+    .badge-yellow { background: rgba(249, 226, 175, 0.15); border-color: var(--ctp-yellow); color: var(--ctp-yellow); }
+    .badge-blue   { background: rgba(137, 180, 250, 0.15); border-color: var(--ctp-blue);   color: var(--ctp-blue); }
+    .badge-mauve  { background: rgba(203, 166, 247, 0.15); border-color: var(--ctp-mauve);  color: var(--ctp-mauve); }
+    .badge-peach  { background: rgba(250, 179, 135, 0.15); border-color: var(--ctp-peach);  color: var(--ctp-peach); }
+    .badge-teal   { background: rgba(148, 226, 213, 0.15); border-color: var(--ctp-teal);   color: var(--ctp-teal); }
+
+    /* ── Quote block ── */
+    .quote-block {
+      background: var(--ctp-surface0);
+      border-left: 6px solid var(--ctp-pink);
+      padding: 0.8em 1.2em;
+      border-radius: 0 12px 12px 0;
+      font-style: italic;
+      font-size: 1em;
+      margin: 0.5em 0;
+      color: var(--ctp-subtext);
+    }
+    .quote-block .attribution {
+      display: block;
+      text-align: right;
+      font-style: normal;
+      font-size: 0.75em;
+      color: var(--ctp-overlay);
+      margin-top: 0.4em;
+    }
+
+    /* ── Diagram boxes (Excalidraw style) ── */
+    .diagram-box {
+      background: rgba(49, 50, 68, 0.6);
+      border: 2.5px solid var(--ctp-overlay);
+      border-radius: 6px 12px 8px 14px;
+      padding: 0.5em 0.8em;
+      text-align: center;
+      box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.25);
+      filter: url(#sketchy);
+    }
+    .diagram-box.glow-border-teal   { border-color: var(--ctp-teal); }
+    .diagram-box.glow-border-green  { border-color: var(--ctp-green); }
+    .diagram-box.glow-border-blue   { border-color: var(--ctp-blue); }
+    .diagram-box.glow-border-mauve  { border-color: var(--ctp-mauve); }
+    .diagram-box.glow-border-peach  { border-color: var(--ctp-peach); }
+    .diagram-box.glow-border-pink   { border-color: var(--ctp-pink); }
+    .diagram-box.glow-border-yellow { border-color: var(--ctp-yellow); }
+
+    .diagram-label {
+      font-family: 'Virgil', cursive;
+      font-size: 1.1em;
+      font-weight: 400;
+    }
+    .diagram-sublabel {
+      font-family: 'Virgil', cursive;
+      font-size: 0.75em;
+      color: var(--ctp-subtext);
+      margin-top: 0.1em;
+    }
+
+    /* ── CSS arrows (hand-drawn style) ── */
+    .arrow-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ctp-overlay);
+      font-family: 'Virgil', cursive;
+      font-size: 2em;
+      padding: 0 0.15em;
+    }
+    .arrow-down {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ctp-overlay);
+      font-family: 'Virgil', cursive;
+      font-size: 1.5em;
+      padding: 0.2em 0;
+    }
+
+    /* ── Checklist ── */
+    .checklist {
+      list-style: none;
+      padding: 0;
+      text-align: left;
+    }
+    .checklist li {
+      padding: 0.25em 0;
+      font-size: 0.82em;
+    }
+    .checklist li::before {
+      content: '✓';
+      color: var(--ctp-green);
+      font-weight: 700;
+      margin-right: 0.5em;
+      font-size: 1.1em;
+    }
+
+    /* ── Takeaway cards ── */
+    .takeaway-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.6em;
+      margin-top: 0.5em;
+    }
+    .takeaway-card {
+      background: rgba(49, 50, 68, 0.6);
+      border-radius: 8px 14px 6px 12px;
+      padding: 0.5em;
+      border: 2.5px solid var(--ctp-overlay);
+      border-top: 4px solid var(--ctp-teal);
+      text-align: center;
+      box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.25);
+      filter: url(#sketchy);
+    }
+    .takeaway-card .icon {
+      font-size: 1.8em;
+      margin-bottom: 0.15em;
+    }
+    .takeaway-card h3 {
+      font-family: 'Virgil', cursive;
+      font-size: 0.65em;
+      margin: 0.15em 0;
+    }
+    .takeaway-card p {
+      font-family: 'Virgil', cursive;
+      font-size: 0.48em;
+      color: var(--ctp-subtext);
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    /* ── Resource links ── */
+    .resource-list {
+      list-style: none;
+      padding: 0;
+      text-align: left;
+    }
+    .resource-list li {
+      padding: 0.4em 0;
+      border-bottom: 1px solid var(--ctp-surface1);
+      font-size: 0.85em;
+    }
+    .resource-list li:last-child {
+      border-bottom: none;
+    }
+    .resource-category {
+      color: var(--ctp-overlay);
+      font-size: 0.6em;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: block;
+      margin-bottom: 0.05em;
+    }
+
+    /* ── Slide-specific layouts ── */
+
+    /* Slide 3: Language wars */
+    .language-handshake {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5em;
+      margin: 0.6em 0;
+    }
+    .language-icon {
+      width: 240px;
+      height: 240px;
+      border-radius: 42% 58% 55% 45% / 48% 52% 48% 52%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Virgil', cursive;
+      font-size: 1em;
+      font-weight: 400;
+      box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.25);
+      filter: url(#sketchy);
+    }
+    .handshake-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2em;
+    }
+    .handshake-icon {
+      font-size: 3em;
+    }
+    .handshake-label {
+      font-family: 'Virgil', cursive;
+      font-size: 0.85em;
+      color: var(--ctp-teal);
+      font-weight: 400;
+    }
+
+    /* Slide 4: Anti-pattern */
+    .antipattern {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.6em;
+      margin-top: 0.5em;
+    }
+    .antipattern-box {
+      background: rgba(49, 50, 68, 0.6);
+      border: 2.5px dashed var(--ctp-pink);
+      border-radius: 6px 10px 8px 12px;
+      padding: 0.5em;
+      text-align: center;
+      font-size: 0.7em;
+      box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.25);
+      filter: url(#sketchy);
+    }
+    .antipattern-box .lang {
+      font-family: 'Virgil', cursive;
+      font-weight: 400;
+      color: var(--ctp-pink);
+      font-size: 1.2em;
+      margin-bottom: 0.2em;
+    }
+    .antipattern-box code {
+      font-family: 'Virgil', cursive;
+      font-size: 0.9em;
+    }
+
+    /* Slide 6: Radial diagram */
+    .radial-diagram {
+      position: relative;
+      width: 1100px;
+      height: 520px;
+      margin: 0.3em auto 0;
+    }
+    .radial-center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+    }
+    .radial-center .diagram-box,
+    .radial-node .diagram-box {
+      position: relative;
+      z-index: 3;
+      background: #313244;
+      filter: none;
+    }
+    .radial-node {
+      position: absolute;
+      z-index: 3;
+    }
+    .radial-node.top-left     { left: 0;    top: 0; }
+    .radial-node.top-right    { right: 0;   top: 0; }
+    .radial-node.bottom-left  { left: 0;    bottom: 0; }
+    .radial-node.bottom-right { right: 0;   bottom: 0; }
+
+    /* Connection lines via SVG */
+    .radial-lines {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* Slide 7: Architecture */
+    .arch-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3em;
+      margin-top: 0.5em;
+    }
+    .arch-box {
+      padding: 0.6em 0.8em;
+      min-width: 300px;
+    }
+    .arch-box .tech {
+      font-size: 0.7em;
+      color: var(--ctp-subtext);
+      margin-top: 0.2em;
+    }
+
+    /* Slide 9: Pipeline */
+    .pipeline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.1em;
+      margin-top: 0.6em;
+      flex-wrap: nowrap;
+    }
+    .pipeline-step {
+      padding: 0.3em 0.4em;
+      min-width: 0;
+    }
+    .pipeline .arrow-right {
+      font-size: 1.2em;
+      padding: 0 0.05em;
+      flex-shrink: 0;
+    }
+    .pipeline-step .diagram-label {
+      font-size: 1em;
+    }
+    .pipeline-step .diagram-sublabel {
+      font-size: 0.62em;
+    }
+
+    /* Slide 10: Demo */
+    .demo-segments {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5em;
+      margin-top: 0.5em;
+    }
+    .demo-segment {
+      background: var(--ctp-surface0);
+      border-radius: 12px;
+      padding: 0.5em 0.6em;
+      border-left: 5px solid;
+      font-size: 0.7em;
+      text-align: left;
+    }
+    .demo-segment .num {
+      font-weight: 700;
+      font-size: 1.4em;
+    }
+    .demo-segment .title {
+      font-weight: 600;
+      margin-top: 0.15em;
+    }
+
+    /* Slide 12: Breaking sequence */
+    .break-sequence {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.15em;
+      margin-top: 0.6em;
+    }
+    .break-step {
+      padding: 0.35em 0.4em;
+      min-width: 110px;
+    }
+    .break-step .diagram-label {
+      font-size: 0.85em;
+    }
+    .break-step .diagram-sublabel {
+      font-size: 0.6em;
+    }
+    .break-sequence .arrow-right {
+      font-size: 1.3em;
+      padding: 0 0.05em;
+    }
+    .break-step.fail {
+      border-color: var(--ctp-pink) !important;
+      box-shadow: 0 0 25px rgba(243, 139, 168, 0.35) !important;
+    }
+    .break-step.fail .diagram-label {
+      color: var(--ctp-pink);
+    }
+
+    /* ── Fragment custom ── */
+    .reveal .fragment.highlight-teal.visible {
+      color: var(--ctp-teal);
+    }
+
+    /* ── Responsive adjustments ── */
+    @media (max-width: 1200px) {
+      .takeaway-grid { grid-template-columns: 1fr; }
+      .antipattern { grid-template-columns: 1fr; }
+      .demo-segments { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- SVG filter for Excalidraw-style rough edges -->
+  <svg style="position:absolute;width:0;height:0;">
+    <defs>
+      <filter id="sketchy" x="-2%" y="-2%" width="104%" height="104%">
+        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" seed="2" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.5" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- SLIDE 1: Title (conference → hook)           -->
+      <!-- ═══════════════════════════════════════════ -->
+      <section>
+        <div style="display:grid;">
+          <h1 class="fragment fade-out" data-fragment-index="0" style="grid-area:1/1; font-size:2em; align-self:center;">Event-Driven Excellence</h1>
+          <h1 class="fragment fade-in" data-fragment-index="0" style="grid-area:1/1; align-self:center;">One Schema to Rule Them All</h1>
+        </div>
+        <div style="display:grid; margin-top:0.2em;">
+          <p class="subtitle fragment fade-out" data-fragment-index="0" style="grid-area:1/1;">Documenting and Testing MongoDB Change Streams<br>with AsyncAPI and Microcks</p>
+          <p class="subtitle fragment fade-in" data-fragment-index="0" style="grid-area:1/1;">Contract-First Development with MongoDB Change Streams, AsyncAPI &amp; Microcks</p>
+        </div>
+        <p class="conference-info">
+          <strong>Artur Ciocanu</strong> · DeveloperWeek 2026 · San Jose, CA
+        </p>
+        <aside class="notes">
+          Welcome, everyone. I'm Artur. This talk is officially titled "Event-Driven Excellence" — documenting and testing MongoDB change streams with AsyncAPI and Microcks. But as I was building the demo for this talk, I realized the real story is simpler than that. One schema to rule them all. What if we stopped arguing about languages and frameworks, and instead agreed on one thing — the shape of our data? One JSON Schema. I want to show you how far that single agreement can take us.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- SLIDE 2: CDC Is Eating the World            -->
+      <!-- ═══════════════════════════════════════════ -->
+      <section>
+        <h2>CDC Is Eating the World</h2>
+        <p style="color:var(--ctp-subtext); margin-bottom:0.5em;">Change Data Capture is no longer optional — it's infrastructure</p>
+        <div style="display:flex; justify-content:center; gap:0.5em; flex-wrap:wrap; margin-top:0.3em;">
+          <span class="badge badge-green">MongoDB Change Streams</span>
+          <span class="badge badge-yellow">Debezium</span>
+          <span class="badge badge-blue">Kafka Connect</span>
+          <span class="badge badge-mauve">DynamoDB Streams</span>
+          <span class="badge badge-peach">PostgreSQL CDC</span>
+        </div>
+        <div class="fragment" style="margin-top:0.6em;">
+          <p>Every major database ships with native CDC support.<br>
+          The question isn't <em>whether</em> to use events — it's <span class="accent-teal">how to keep them honest</span>.</p>
+        </div>
+        <aside class="notes">
+          Change Data Capture is everywhere now. MongoDB has change streams. PostgreSQL has logical replication. Debezium sits on top of pretty much anything. DynamoDB has streams. Every major database vendor has accepted that data changes are events, and events need to flow somewhere. The question is no longer "should we use CDC?" — it's "how do we make sure the events we produce actually match what consumers expect?" That's the gap we're filling today.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- SLIDE 3: The Language Wars Are Over         -->
+      <!-- ═══════════════════════════════════════════ -->
+      <section>
+        <h2>The Language Wars Are Over</h2>
+        <div class="language-handshake">
+          <div class="language-icon diagram-box glow-border-peach">
+            <div>
+              <div class="diagram-label accent-peach">Java</div>
+              <div class="diagram-sublabel">Spring Boot</div>
+            </div>
+          </div>
+          <div class="handshake-center">
+            <div class="handshake-icon">⇄</div>
+            <div class="handshake-label">THE CONTRACT</div>
+          </div>
+          <div class="language-icon diagram-box glow-border-blue">
+            <div>
+              <div class="diagram-label accent-blue">Python</div>
+              <div class="diagram-sublabel">Chainlit</div>
+            </div>
+          </div>
+        </div>
+        <p class="fragment" style="margin-top:0.4em;">
+          Java vs. Python is the <span class="accent-pink">wrong debate</span>.<br>
+          The only question: <span class="accent-teal">do they agree on the data shape?</span>
+        </p>
+        <aside class="notes">
+          How much time have you spent in meetings debating Java vs. Python? Spring vs. FastAPI? Here's my position after 20 years: it's the wrong debate. If Hub is Java and Edge is Python, who cares? What matters — the only thing that matters — is whether they agree on what the messages look like. Your Java service serializes to JSON. Your Python service deserializes from JSON. The schema is the handshake. The languages never need to meet.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- SLIDE 4: Hope-Driven Development            -->
+      <!-- ═══════════════════════════════════════════ -->
+      <section>
+        <h2 style="font-size:2.2em;">Hope-Driven Development</h2>
+        <div class="quote-block">
+          "I deployed the producer. I hope the consumer still works."
+          <span class="attribution">— Every team, eventually</span>
+        </div>
+        <div class="fragment" style="margin-top:0.5em;">
+          <p style="color:var(--ctp-subtext); margin-bottom:0.4em;">The same schema, written three times:</p>
+          <div class="antipattern">
+            <div class="antipattern-box">
+              <div class="lang">Java</div>
+              <code>class AgentConfig { ... }</code>
+            </div>
+            <div class="antipattern-box">
+              <div class="lang">Python</div>
+              <code>@dataclass AgentConfig</code>
+            </div>
+            <div class="antipattern-box">
+              <div class="lang">MongoDB</div>
+              <code>$jsonSchema: { ... }</code>
+            </div>
+          </div>
+        </div>
+        <p class="fragment" style="margin-top:0.4em; color:var(--ctp-pink);">
+          Three copies. Three chances to drift. Zero guarantees.
+        </p>
+        <aside class="notes">
+          Here's the problem I keep seeing. Someone writes a Java class. Someone else writes a Python dataclass. Someone else writes a MongoDB validator. Three definitions of the same data shape, in three different languages, maintained by three different people. And the only thing keeping them in sync? Hope. Hope-driven development. I deployed it, I hope it works. The 3 AM page that tells you it didn't — that's the tax on hope.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- SLIDE 4b: Three Questions                    -->
+      <!-- ═══════════════════════════════════════════ -->
+      <section>
+        <h2 style="font-size:2em;">Three Questions Every Event System Must Answer</h2>
+        <div style="display:flex; align-items:flex-start; justify-content:center; gap:0.3em; margin-top:0.5em;">
+          <div class="fragment" style="flex:1; text-align:center;">
+            <div class="diagram-box glow-border-mauve" style="padding:0.4em;">
+              <div class="diagram-label accent-mauve">What's the shape?</div>
+            </div>
+            <div class="arrow-down" style="font-size:1.2em;">↓</div>
+            <div class="diagram-box glow-border-mauve" style="padding:0.4em;">
+              <div class="diagram-label accent-mauve">JSON Schema</div>
+              <div class="diagram-sublabel">Defines structure<br>Validates data<br>Single source of truth</div>
+            </div>
+          </div>
+          <div class="fragment" style="flex:0 0 auto; padding-top:0.5em;">
+            <div class="arrow-right" style="font-size:1.3em;">→</div>
+            <div style="font-family:'Virgil',cursive; font-size:0.5em; color:var(--ctp-overlay); text-align:center;">referenced by</div>
+          </div>
+          <div class="fragment" style="flex:1; text-align:center;">
+            <div class="diagram-box glow-border-peach" style="padding:0.4em;">
+              <div class="diagram-label accent-peach">Who produces / consumes?</div>
+            </div>
+            <div class="arrow-down" style="font-size:1.2em;">↓</div>
+            <div class="diagram-box glow-border-peach" style="padding:0.4em;">
+              <div class="diagram-label accent-peach">AsyncAPI</div>
+              <div class="diagram-sublabel">Defines channels<br>Documents operations<br>Machine-readable</div>
+            </div>
+          </div>
+          <div class="fragment" style="flex:0 0 auto; padding-top:0.5em;">
+            <div class="arrow-right" style="font-size:1.3em;">→</div>
+            <div style="font-family:'Virgil',cursive; font-size:0.5em; color:var(--ctp-overlay); text-align:center;">imported into</div>
+          </div>
+          <div class="fragment" style="flex:1; text-align:center;">
+            <div class="diagram-box glow-border-teal" style="padding:0.4em;">
+              <div class="diagram-label accent-teal">How do we test?</div>
+            </div>
+            <div class="arrow-down" style="font-size:1.2em;">↓</div>
+            <div class="diagram-box glow-border-teal" style="padding:0.4em;">
+              <div class="diagram-label accent-teal">Microcks</div>
+              <div class="diagram-sublabel">Generates mocks<br>Validates contracts<br>CI/CD integration</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          So the problem is clear — hope doesn't scale. But before we jump to the solution, let's frame it properly. Every event-driven system needs to answer three questions. What's the shape of the data? That's JSON Schema. Who produces it, who consumes it, through what channels? That's AsyncAPI. And how do we know it actually works? That's Microcks. Three questions, three tools, and they chain together beautifully. The schema feeds the spec, the spec feeds the test runner.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- SLIDE 5: The Unifier — JSON Schema          -->
+      <!-- ═══════════════════════════════════════════ -->
+      <section>
+        <h2>The Unifier: JSON Schema</h2>
+        <pre><code class="language-json" data-trim data-noescape data-line-numbers="1-4|5-8|9-13|14-17|18-21|22-25">{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AgentConfiguration",
+  "type": "object",
+  "required": [
+    "agentId", "name", "modelProvider",
+    "modelId", "temperature"
+  ],
+  "properties": {
+    "agentId": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1, "maxLength": 100
+    },
+    "modelProvider": {
+      "type": "string",
+      "enum": ["OPENAI", "ANTHROPIC", "GOOGLE", "MISTRAL"]
+    },
+    "modelId": {
+      "type": "string"
+    },
+    "temperature": {
+      "type": "number",
+      "minimum": 0, "maximum": 2
+    }
+  }
+}</code></pre>
+        <aside class="notes">
+          This is the fix. One JSON Schema file. Five required fields — agentId, name, modelProvider, modelId, and temperature. That's our contract. Notice: this isn't Java. It isn't Python. It's a language-neutral description of the data shape. MongoDB can enforce it as a collection validator. AsyncAPI can reference it for event payloads. Microcks can generate mocks from it. And both services validate against the same file. One schema. One source of truth.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- SLIDE 6: One Schema, Four Uses              -->
+      <!-- ═══════════════════════════════════════════ -->
+      <section>
+        <h2>One Schema, Four Uses</h2>
+        <div class="radial-diagram">
+          <!-- SVG connection lines -->
+          <svg class="radial-lines" viewBox="0 0 1100 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="550" y1="260" x2="130" y2="60" stroke="#6c7086" stroke-width="2" stroke-dasharray="8 5"/>
+            <line x1="550" y1="260" x2="970" y2="60" stroke="#6c7086" stroke-width="2" stroke-dasharray="8 5"/>
+            <line x1="550" y1="260" x2="130" y2="460" stroke="#6c7086" stroke-width="2" stroke-dasharray="8 5"/>
+            <line x1="550" y1="260" x2="970" y2="460" stroke="#6c7086" stroke-width="2" stroke-dasharray="8 5"/>
+          </svg>
+          <!-- Center: Schema -->
+          <div class="radial-center">
+            <div class="diagram-box glow-border-blue" style="padding:0.5em 1em;">
+              <div class="diagram-label accent-blue">JSON Schema</div>
+              <div class="diagram-sublabel">agent-config.schema.json</div>
+            </div>
+          </div>
+          <!-- Top-left: MongoDB -->
+          <div class="radial-node top-left fragment">
+            <div class="diagram-box glow-border-green" style="padding:0.4em 0.7em;">
+              <div class="diagram-label accent-green">MongoDB</div>
+              <div class="diagram-sublabel">Collection Validator</div>
+            </div>
+          </div>
+          <!-- Top-right: AsyncAPI -->
+          <div class="radial-node top-right fragment">
+            <div class="diagram-box glow-border-mauve" style="padding:0.4em 0.7em;">
+              <div class="diagram-label accent-mauve">AsyncAPI</div>
+              <div class="diagram-sublabel">Payload Definition</div>
+            </div>
+          </div>
+          <!-- Bottom-left: Mocks -->
+          <div class="radial-node bottom-left fragment">
+            <div class="diagram-box glow-border-peach" style="padding:0.4em 0.7em;">
+              <div class="diagram-label accent-peach">Microcks</div>
+              <div class="diagram-sublabel">Mock Generator</div>
+            </div>
+          </div>
+          <!-- Bottom-right: Tests -->
+          <div class="radial-node bottom-right fragment">
+            <div class="diagram-box glow-border-peach" style="padding:0.4em 0.7em;">
+              <div class="diagram-label accent-peach">Microcks</div>
+              <div class="diagram-sublabel">Contract Tests</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Here's where it gets interesting. That one JSON Schema file does four jobs. First, MongoDB uses it as a collection validator — bad documents get rejected at write time. Second, AsyncAPI references it to define the event payload — documentation that's always current because it points at the actual schema. Third, Microcks imports the AsyncAPI spec and generates mock events — so the Edge team can develop without the Hub even running. And fourth, Microcks runs contract tests — validating that real events from the Hub match the schema. One file. Four uses. Zero duplication.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- SLIDE 7: The Scenario                       -->
+      <!-- ═══════════════════════════════════════════ -->
+      <section>
+        <h2>The Scenario</h2>
+        <div style="display:flex; align-items:flex-start; justify-content:center; gap:1em; margin-top:0.3em;">
+          <!-- Left column: Hub (Producer) -->
+          <div class="fragment" style="flex:0 0 auto; text-align:center;">
+            <div class="diagram-box glow-border-peach" style="padding:0.4em 0.6em;">
+              <div class="diagram-label accent-peach">Hub Service</div>
+              <div class="diagram-sublabel">Java / Spring Boot</div>
+            </div>
+            <div style="font-family:'Virgil',cursive; font-size:0.5em; color:var(--ctp-overlay); margin-top:0.15em;">Config Service · REST API</div>
+          </div>
+
+          <!-- Arrow down-right to MongoDB -->
+          <div class="fragment" style="flex:0 0 auto; align-self:center;">
+            <div style="font-family:'Virgil',cursive; font-size:0.5em; color:var(--ctp-yellow); text-align:center;">writes config</div>
+            <div class="arrow-right" style="font-size:1.5em;">→</div>
+          </div>
+
+          <!-- Center column: MongoDB -->
+          <div class="fragment" style="flex:0 0 auto; text-align:center;">
+            <div class="diagram-box glow-border-green" style="padding:0.4em 0.6em;">
+              <div class="diagram-label accent-green">MongoDB</div>
+              <div class="diagram-sublabel">agent_configs collection</div>
+            </div>
+            <div class="arrow-down" style="font-size:1.2em; padding:0.1em 0;">↓</div>
+            <div class="diagram-box glow-border-yellow" style="padding:0.3em 0.5em;">
+              <div class="diagram-label accent-yellow" style="font-size:0.9em;">Change Stream</div>
+              <div class="diagram-sublabel" style="font-size:0.55em;">operationType · fullDocument</div>
+            </div>
+          </div>
+
+          <!-- Arrow to Edge -->
+          <div class="fragment" style="flex:0 0 auto; align-self:center;">
+            <div style="font-family:'Virgil',cursive; font-size:0.5em; color:var(--ctp-yellow); text-align:center;">real-time events</div>
+            <div class="arrow-right" style="font-size:1.5em;">→</div>
+          </div>
+
+          <!-- Right column: Edge (Consumer) -->
+          <div class="fragment" style="flex:0 0 auto; text-align:center;">
+            <div class="diagram-box glow-border-blue" style="padding:0.4em 0.6em;">
+              <div class="diagram-label accent-blue">Edge Service</div>
+              <div class="diagram-sublabel">Python / Chainlit</div>
+            </div>
+            <div class="arrow-down" style="font-size:1.2em; padding:0.1em 0;">↓</div>
+            <div class="diagram-box glow-border-blue" style="padding:0.3em 0.5em; border-style:dashed;">
+              <div class="diagram-label accent-blue" style="font-size:0.9em;">Agent Runtime</div>
+              <div class="diagram-sublabel" style="font-size:0.55em;">reconfigures in real-time</div>
+            </div>
+          </div>
+        </div>
+        <p class="fragment" style="margin-top:0.4em; font-size:0.72em;">
+          Hub doesn't know Python exists. Edge doesn't know Java exists.<br>
+          <span class="accent-teal">MongoDB is the bridge. The schema is the guarantee.</span>
+        </p>
+        <aside class="notes">
+          Let me set the scene. We have two services. The Hub — a Java Spring Boot application — manages AI agent configurations. Temperature, model selection, system prompts. It writes to MongoDB. MongoDB validates the document against our schema, and fires a change stream event — you can see the key fields here: operationType and fullDocument. The Edge service — Python with Chainlit — consumes those events via the Stream Consumer and reconfigures running AI agents in real-time. Two languages, one database, one contract. The Hub doesn't know Python exists. The Edge doesn't know Java exists. MongoDB is the bridge, and the schema is the guarantee.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- SLIDE 8: AsyncAPI 3.0                       -->
+      <!-- ═══════════════════════════════════════════ -->
+      <section>
+        <h2>AsyncAPI 3.0: Documentation as Code</h2>
+        <pre><code class="language-yaml" data-trim data-noescape data-line-numbers="1-2|4-8|10-17|19-24|26-29">asyncapi: 3.0.0
+info:
+  title: Agent Configuration Events
+
+channels:
+  agentConfigChanges:
+    address: hub_db.agentConfigs
+    messages:
+      insertEvent:
+        $ref: '#/components/messages/AgentConfigInsertEvent'
+
+operations:
+  onAgentConfigChange:
+    action: receive
+    channel:
+      $ref: '#/channels/agentConfigChanges'
+
+components:
+  messages:
+    AgentConfigInsertEvent:
+      payload:
+        $ref: '#/components/schemas/AgentConfiguration'
+
+  schemas:
+    AgentConfiguration:
+      <mark>$ref: 'agent-config.schema.json'</mark></code></pre>
+        <p class="fragment" style="margin-top:0.3em; font-size:0.65em;">
+          <span class="accent-blue">$ref</span> — no copy, no drift. Same schema MongoDB enforces.
+        </p>
+        <aside class="notes">
+          AsyncAPI 3.0 describes how configuration changes propagate as events. Notice the structure — channels are separated from operations, which is new in version 3. But the key line is at the bottom: the schema reference. It's a dollar-ref pointing directly at our JSON Schema file. No copy. No duplication. The AsyncAPI spec and MongoDB are enforcing the exact same contract. When Microcks imports this spec, it understands the full picture — what channels exist, what operations consumers can perform, and what the payload looks like.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- SLIDE 9: Microcks                           -->
+      <!-- ═══════════════════════════════════════════ -->
+      <section>
+        <h2>Microcks: The Safety Net</h2>
+        <p style="color:var(--ctp-subtext);">CNCF Sandbox · Mock generation · Contract testing</p>
+        <div class="pipeline">
+          <div class="pipeline-step diagram-box glow-border-mauve fragment">
+            <div class="diagram-label accent-mauve">Import</div>
+            <div class="diagram-sublabel">AsyncAPI Spec</div>
+          </div>
+          <div class="arrow-right fragment">→</div>
+          <div class="pipeline-step diagram-box glow-border-peach fragment">
+            <div class="diagram-label accent-peach">Mock</div>
+            <div class="diagram-sublabel">Generate Events</div>
+          </div>
+          <div class="arrow-right fragment">→</div>
+          <div class="pipeline-step diagram-box glow-border-blue fragment">
+            <div class="diagram-label accent-blue">Develop</div>
+            <div class="diagram-sublabel">Edge without Hub</div>
+          </div>
+          <div class="arrow-right fragment">→</div>
+          <div class="pipeline-step diagram-box glow-border-green fragment">
+            <div class="diagram-label accent-green">Validate</div>
+            <div class="diagram-sublabel">Contract Tests</div>
+          </div>
+          <div class="arrow-right fragment">→</div>
+          <div class="pipeline-step diagram-box glow-border-teal fragment">
+            <div class="diagram-label accent-teal">Ship</div>
+            <div class="diagram-sublabel">With Confidence</div>
+          </div>
+        </div>
+        <p class="fragment" style="margin-top:0.6em;">
+          Edge develops against mocks. Hub iterates on implementation.<br>
+          <span class="accent-teal">The contract keeps them honest.</span>
+        </p>
+        <aside class="notes">
+          Microcks is the piece that ties it all together. It's a CNCF sandbox project — production-grade, cloud-native. Here's the workflow. You import your AsyncAPI spec. Microcks reads the schema and generates mock events. Now the Edge team can develop their consumer without the Hub service even running — they code against Microcks mocks. Meanwhile, when the Hub is ready, Microcks runs contract tests — validating that real events from the Hub match the spec. If they match, you ship with confidence. If they don't, you find out in CI, not at 3 AM. Two teams, developing in parallel, kept honest by the contract.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- SLIDE 10: Live Demo                         -->
+      <!-- ═══════════════════════════════════════════ -->
+      <section>
+        <h2 style="font-size:2.8em;">Live Demo</h2>
+        <p style="color:var(--ctp-subtext); margin-bottom:0.5em;">Let's see it in action</p>
+        <div class="demo-segments">
+          <div class="demo-segment" style="border-left-color:var(--ctp-blue);">
+            <div class="num accent-blue">01</div>
+            <div class="title">The Contract</div>
+            <div style="color:var(--ctp-subtext);">Schema + AsyncAPI + Microcks</div>
+          </div>
+          <div class="demo-segment" style="border-left-color:var(--ctp-peach);">
+            <div class="num accent-peach">02</div>
+            <div class="title">Hub → MongoDB → Edge</div>
+            <div style="color:var(--ctp-subtext);">Java writes, Python reads</div>
+          </div>
+          <div class="demo-segment" style="border-left-color:var(--ctp-green);">
+            <div class="num accent-green">03</div>
+            <div class="title">Real-Time Reconfig</div>
+            <div style="color:var(--ctp-subtext);">Temperature, prompts</div>
+          </div>
+          <div class="demo-segment" style="border-left-color:var(--ctp-yellow);">
+            <div class="num accent-yellow">04</div>
+            <div class="title">Break the Contract</div>
+            <div style="color:var(--ctp-subtext);">MongoDB + Microcks catch it</div>
+          </div>
+          <div class="demo-segment" style="border-left-color:var(--ctp-pink);">
+            <div class="num accent-pink">05</div>
+            <div class="title">Defense in Depth</div>
+            <div style="color:var(--ctp-subtext);">Validation at every layer</div>
+          </div>
+          <div class="demo-segment" style="border-left-color:var(--ctp-teal);">
+            <div class="num accent-teal">06</div>
+            <div class="title">Polyglot Proof</div>
+            <div style="color:var(--ctp-subtext);">Language doesn't matter</div>
+          </div>
+        </div>
+        <aside class="notes">
+          Time to switch from slides to code. Here's what we're going to walk through. First, I'll show the contract layer — the schema and AsyncAPI spec in Microcks. Then we'll see the full flow live: Java Hub writes to MongoDB, change stream fires, Python Edge picks it up. We'll reconfigure an AI agent in real-time — change the temperature, swap the system prompt. Then the interesting part — we'll try to break the contract, and watch the safety nets catch it. Let's go.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- SLIDE 11: What Just Happened?               -->
+      <!-- ═══════════════════════════════════════════ -->
+      <section>
+        <h2>What Just Happened?</h2>
+        <ul class="checklist" style="max-width:1200px; margin:0.3em auto 0;">
+          <li class="fragment"><span class="accent-blue">One JSON Schema file</span> — single source of truth</li>
+          <li class="fragment"><span class="accent-green">MongoDB validation</span> — bad documents rejected at write time</li>
+          <li class="fragment"><span class="accent-mauve">AsyncAPI definition</span> — documentation that's always current</li>
+          <li class="fragment"><span class="accent-peach">Microcks mocks</span> — Edge developed without Hub running</li>
+          <li class="fragment"><span class="accent-teal">Contract tests</span> — breaks caught before production</li>
+        </ul>
+        <p class="fragment" style="margin-top:0.4em; font-weight:600;">
+          One file. Four uses. <span class="accent-teal">Zero coordination meetings.</span>
+        </p>
+        <aside class="notes">
+          Let's take stock. One JSON Schema file. Used for MongoDB validation — bad documents rejected at write time. Used for AsyncAPI payload definition — documentation that's always current. Used for Microcks mocks — Edge developed without Hub. Used for contract tests — breaks caught before production. One file. Four uses. Zero coordination meetings about data formats. No one had to write a Java class and a Python dataclass and a MongoDB validator. One schema handled all of it.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- SLIDE 12: Catching the Break                -->
+      <!-- ═══════════════════════════════════════════ -->
+      <section>
+        <h2>Catching the Break</h2>
+        <p style="color:var(--ctp-subtext);">The 3 AM page that didn't happen</p>
+        <div class="break-sequence">
+          <div class="break-step diagram-box glow-border-peach fragment">
+            <div class="diagram-label accent-peach">Deploy</div>
+            <div class="diagram-sublabel">New Hub version</div>
+          </div>
+          <div class="arrow-right fragment">→</div>
+          <div class="break-step diagram-box glow-border-yellow fragment">
+            <div class="diagram-label accent-yellow">Event</div>
+            <div class="diagram-sublabel">Changed payload</div>
+          </div>
+          <div class="arrow-right fragment">→</div>
+          <div class="break-step diagram-box glow-border-mauve fragment">
+            <div class="diagram-label accent-mauve">Validate</div>
+            <div class="diagram-sublabel">Microcks checks</div>
+          </div>
+          <div class="arrow-right fragment">→</div>
+          <div class="break-step diagram-box fail fragment">
+            <div class="diagram-label">⚠ FAIL</div>
+            <div class="diagram-sublabel">Schema mismatch</div>
+          </div>
+          <div class="arrow-right fragment">→</div>
+          <div class="break-step diagram-box glow-border-green fragment">
+            <div class="diagram-label accent-green">Caught</div>
+            <div class="diagram-sublabel">In CI, not prod</div>
+          </div>
+        </div>
+        <div class="fragment" style="margin-top:0.6em;">
+          <div class="quote-block" style="max-width:900px; margin:0 auto;">
+            Adding a <span class="accent-pink">required</span> field breaks existing consumers.<br>
+            Microcks caught it. MongoDB caught it. <strong>Nobody got paged.</strong>
+          </div>
+        </div>
+        <aside class="notes">
+          Here's the "aha" moment. A developer adds a new required field to the Hub's schema — let's say "version." They deploy. The Hub starts emitting events with the new field. But old documents don't have it. Microcks runs the contract test and fails — the old events don't match the new required field. The CI pipeline goes red. The breaking change is caught before it reaches production. No 3 AM page. No rollback. No "sorry, we didn't know the consumer depended on that." The contract caught it. And honestly, that's the whole point. The contract isn't documentation you write and forget. It's a safety net that catches you when you drift.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- SLIDE 13: The Contract Is The System        -->
+      <!-- ═══════════════════════════════════════════ -->
+      <section>
+        <h2 style="font-size:2em;">The Contract Is The System</h2>
+        <div class="takeaway-grid" style="max-width:1600px; margin:0.5em auto 0;">
+          <div class="takeaway-card fragment" style="border-top-color:var(--ctp-blue);">
+            <div class="icon">📋</div>
+            <h3 class="accent-blue">Schema as Source of Truth</h3>
+            <p>One definition, multiple uses. No duplication, no drift. MongoDB, AsyncAPI, Microcks — same file.</p>
+          </div>
+          <div class="takeaway-card fragment" style="border-top-color:var(--ctp-teal);">
+            <div class="icon">🤝</div>
+            <h3>Contract Independence</h3>
+            <p>Java and Python interoperate without knowing about each other. Agree on the shape — implement in whatever makes sense.</p>
+          </div>
+          <div class="takeaway-card fragment" style="border-top-color:var(--ctp-green);">
+            <div class="icon">🛡️</div>
+            <h3 class="accent-green">Validation at Every Layer</h3>
+            <p>Database rejects bad writes. Producer validates events. Consumer validates payloads. CI catches drift.</p>
+          </div>
+        </div>
+        <aside class="notes">
+          Three takeaways. First: schema as source of truth. One definition, multiple uses. MongoDB enforces it, AsyncAPI references it, Microcks generates mocks and tests from it. No duplication, no drift. Second: contract independence. Java and Python interoperate without knowing about each other. If we agree on the data shape, implementation language becomes an implementation detail. Third: validation at every layer. The database rejects bad writes. The producer validates events. The consumer validates payloads. CI catches drift. Defense in depth. The contract isn't documentation. It's executable specification. It is the system.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- SLIDE 14: Resources                         -->
+      <!-- ═══════════════════════════════════════════ -->
+      <section>
+        <h2>Resources</h2>
+        <ul class="resource-list" style="max-width:1100px; margin:0.5em auto 0;">
+          <li>
+            <span class="resource-category">Specification</span>
+            <a href="https://www.asyncapi.com/docs/reference/specification/v3.0.0" target="_blank">asyncapi.com — AsyncAPI 3.0 Specification</a>
+          </li>
+          <li>
+            <span class="resource-category">Testing &amp; Mocking</span>
+            <a href="https://microcks.io" target="_blank">microcks.io — API Mocking &amp; Contract Testing</a>
+          </li>
+          <li>
+            <span class="resource-category">Database</span>
+            <a href="https://www.mongodb.com/docs/manual/changestreams/" target="_blank">mongodb.com — Change Streams Documentation</a>
+          </li>
+          <li>
+            <span class="resource-category">Schema</span>
+            <a href="https://json-schema.org" target="_blank">json-schema.org — JSON Schema</a>
+          </li>
+        </ul>
+        <aside class="notes">
+          Here are the key resources. AsyncAPI 3.0 spec — that's where the channel and operation model comes from. Microcks for mock generation and contract testing — it's a CNCF sandbox project, production-ready. MongoDB change streams docs if you want to dig into the CDC side. And JSON Schema, which is the foundation that ties everything together.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- SLIDE 15: Connect                           -->
+      <!-- ═══════════════════════════════════════════ -->
+      <section>
+        <h2>Thank You</h2>
+        <p style="color:var(--ctp-subtext); margin-bottom:0.8em;">Let's connect</p>
+        <div style="max-width:900px; margin:0 auto; text-align:left;">
+          <ul class="resource-list">
+            <li>
+              <span class="resource-category">GitHub</span>
+              <a href="https://github.com/artur-ciocanu/" target="_blank">github.com/artur-ciocanu</a>
+            </li>
+            <li>
+              <span class="resource-category">LinkedIn</span>
+              <a href="https://www.linkedin.com/in/artur-ciocanu" target="_blank">linkedin.com/in/artur-ciocanu</a>
+            </li>
+          </ul>
+          <div style="margin-top:1em; padding:0.7em 1em; background:var(--ctp-surface0); border-radius:12px; border-left:5px solid var(--ctp-teal);">
+            <p style="font-size:0.8em; margin:0; color:var(--ctp-subtext);">
+              Slides and demo source code available on GitHub.
+            </p>
+          </div>
+        </div>
+        <aside class="notes">
+          That's all I have. The demo source code and these slides will be on GitHub. I'd love to hear about your experiences with contract-first development — find me on LinkedIn or come say hi after the talk. Thank you.
+        </aside>
+      </section>
+
+    </div><!-- .slides -->
+  </div><!-- .reveal -->
+
+  <script src="vendor/revealjs/dist/reveal.js"></script>
+  <script src="vendor/revealjs/plugin/highlight/highlight.js"></script>
+  <script src="vendor/revealjs/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      width: 1920,
+      height: 1080,
+      margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2.0,
+      center: true,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      plugins: [RevealHighlight, RevealNotes]
+    });
+  </script>
+</body>
+</html>

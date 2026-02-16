@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: agent-config-hub
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/hub_db?replicaSet=rs0&directConnection=true
+
+server:
+  port: 8081
+
+logging:
+  level:
+    org.springframework.data.mongodb: DEBUG

@@ -1,0 +1,244 @@
+asyncapi: 3.0.0
+info:
+  title: Agent Configuration Events
+  version: 1.0.0
+  description: |
+    Events emitted when agent configurations change in the Hub service.
+    Consumed by Edge services to update running agents in real-time.
+
+    This API demonstrates contract-first development where the JSON Schema
+    is the single source of truth for both MongoDB validation and event payloads.
+  contact:
+    name: Platform Team
+    email: platform@example.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+
+servers:
+  development:
+    host: localhost:27017
+    protocol: mongodb
+    description: Local MongoDB replica set
+
+  production:
+    host: mongodb-cluster.example.com:27017
+    protocol: mongodb+srv
+    description: Production MongoDB Atlas cluster
+
+defaultContentType: application/json
+
+channels:
+  agentConfigChanges:
+    address: hub_db.agentConfigs
+    title: Agent Configuration Changes
+    description: |
+      MongoDB change stream on the agentConfigs collection.
+      Emits events for insert, update, replace, and delete operations.
+    messages:
+      insertEvent:
+        $ref: '#/components/messages/AgentConfigInsertEvent'
+      updateEvent:
+        $ref: '#/components/messages/AgentConfigUpdateEvent'
+      deleteEvent:
+        $ref: '#/components/messages/AgentConfigDeleteEvent'
+
+operations:
+  onAgentConfigChange:
+    action: receive
+    channel:
+      $ref: '#/channels/agentConfigChanges'
+    summary: Receive agent configuration change events
+    description: |
+      Subscribe to real-time configuration changes.
+      Use the resume token from the _id field to resume after disconnection.
+    messages:
+      - $ref: '#/channels/agentConfigChanges/messages/insertEvent'
+      - $ref: '#/channels/agentConfigChanges/messages/updateEvent'
+      - $ref: '#/channels/agentConfigChanges/messages/deleteEvent'
+
+components:
+  messages:
+    AgentConfigInsertEvent:
+      name: AgentConfigInsertEvent
+      title: Agent Configuration Created
+      summary: A new agent configuration was created
+      contentType: application/json
+      headers:
+        $ref: '#/components/schemas/ChangeStreamHeaders'
+      payload:
+        $ref: '#/components/schemas/InsertEventPayload'
+
+    AgentConfigUpdateEvent:
+      name: AgentConfigUpdateEvent
+      title: Agent Configuration Updated
+      summary: An existing agent configuration was modified
+      contentType: application/json
+      headers:
+        $ref: '#/components/schemas/ChangeStreamHeaders'
+      payload:
+        $ref: '#/components/schemas/UpdateEventPayload'
+
+    AgentConfigDeleteEvent:
+      name: AgentConfigDeleteEvent
+      title: Agent Configuration Deleted
+      summary: An agent configuration was removed
+      contentType: application/json
+      headers:
+        $ref: '#/components/schemas/ChangeStreamHeaders'
+      payload:
+        $ref: '#/components/schemas/DeleteEventPayload'
+
+  schemas:
+    ChangeStreamHeaders:
+      type: object
+      properties:
+        x-resume-token:
+          type: string
+          description: Resume token for exactly-once processing
+        x-cluster-time:
+          type: string
+          description: MongoDB cluster time
+        x-wall-time:
+          type: string
+          format: date-time
+          description: Wall clock time when event occurred
+
+    AgentConfiguration:
+      $ref: 'agent-config.schema.json'
+
+    DocumentKey:
+      type: object
+      required:
+        - _id
+      properties:
+        _id:
+          type: string
+          description: MongoDB ObjectId as string
+
+    UpdateDescription:
+      type: object
+      properties:
+        updatedFields:
+          type: object
+          additionalProperties: true
+          description: Fields that were updated with their new values
+        removedFields:
+          type: array
+          items:
+            type: string
+          description: Fields that were removed
+        truncatedArrays:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              newSize:
+                type: integer
+
+    InsertEventPayload:
+      type: object
+      required:
+        - _id
+        - operationType
+        - ns
+        - documentKey
+        - fullDocument
+      properties:
+        _id:
+          type: object
+          properties:
+            _data:
+              type: string
+          description: Resume token
+        operationType:
+          type: string
+          const: insert
+        ns:
+          type: object
+          properties:
+            db:
+              type: string
+            coll:
+              type: string
+        documentKey:
+          $ref: '#/components/schemas/DocumentKey'
+        fullDocument:
+          $ref: '#/components/schemas/AgentConfiguration'
+        clusterTime:
+          type: string
+        wallTime:
+          type: string
+          format: date-time
+
+    UpdateEventPayload:
+      type: object
+      required:
+        - _id
+        - operationType
+        - ns
+        - documentKey
+      properties:
+        _id:
+          type: object
+          properties:
+            _data:
+              type: string
+        operationType:
+          type: string
+          const: update
+        ns:
+          type: object
+          properties:
+            db:
+              type: string
+            coll:
+              type: string
+        documentKey:
+          $ref: '#/components/schemas/DocumentKey'
+        fullDocument:
+          $ref: '#/components/schemas/AgentConfiguration'
+        fullDocumentBeforeChange:
+          $ref: '#/components/schemas/AgentConfiguration'
+        updateDescription:
+          $ref: '#/components/schemas/UpdateDescription'
+        clusterTime:
+          type: string
+        wallTime:
+          type: string
+          format: date-time
+
+    DeleteEventPayload:
+      type: object
+      required:
+        - _id
+        - operationType
+        - ns
+        - documentKey
+      properties:
+        _id:
+          type: object
+          properties:
+            _data:
+              type: string
+        operationType:
+          type: string
+          const: delete
+        ns:
+          type: object
+          properties:
+            db:
+              type: string
+            coll:
+              type: string
+        documentKey:
+          $ref: '#/components/schemas/DocumentKey'
+        fullDocumentBeforeChange:
+          $ref: '#/components/schemas/AgentConfiguration'
+        clusterTime:
+          type: string
+        wallTime:
+          type: string
+          format: date-time

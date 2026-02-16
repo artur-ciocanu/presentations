@@ -1,0 +1,126 @@
+# Contract-First Demo -- DeveloperWeek 2026
+
+# Default: list available commands
+default:
+    @just --list
+
+# --- Infrastructure ---
+
+# Start MongoDB replica set and Microcks
+infra:
+    docker compose up -d
+
+# Stop all infrastructure
+infra-down:
+    docker compose down
+
+# Stop and remove all data volumes
+infra-clean:
+    docker compose down -v
+
+# Show infrastructure logs
+infra-logs:
+    docker compose logs -f
+
+# --- Hub Service (Java/Spring Boot) ---
+
+# Run the Hub service
+hub:
+    cd hub && ./mvnw spring-boot:run
+
+# Build the Hub service
+hub-build:
+    cd hub && ./mvnw clean package -DskipTests
+
+# --- Edge Service (Python/Chainlit) ---
+
+# Install Edge dependencies
+edge-install:
+    cd edge && uv sync
+
+# Run the Edge service
+edge:
+    cd edge && uv run chainlit run app.py --port 8000
+
+# --- Demo Scenarios ---
+
+_hub_url := "http://localhost:8081/api/v1/agents"
+
+# Create initial agent configuration
+demo-create:
+    curl -s -X POST {{ _hub_url }} \
+        -H "Content-Type: application/json" \
+        -d '{ \
+            "agentId": "demo-agent", \
+            "name": "Conference Demo Agent", \
+            "modelProvider": "ANTHROPIC", \
+            "modelId": "claude-3-sonnet-20240229", \
+            "temperature": 0.7, \
+            "maxTokens": 1024, \
+            "systemPrompt": "You are a helpful assistant at a developer conference. Be concise and technical.", \
+            "tools": ["web_search", "code_interpreter"], \
+            "metadata": {"demo": true, "conference": "DeveloperWeek 2026"} \
+        }' | jq .
+
+# Update agent temperature (default: 1.5)
+demo-temp value="1.5":
+    curl -s -X PUT {{ _hub_url }}/demo-agent \
+        -H "Content-Type: application/json" \
+        -d '{ \
+            "agentId": "demo-agent", \
+            "name": "Conference Demo Agent", \
+            "modelProvider": "ANTHROPIC", \
+            "modelId": "claude-3-sonnet-20240229", \
+            "temperature": {{ value }}, \
+            "maxTokens": 1024, \
+            "systemPrompt": "You are a helpful assistant at a developer conference. Be concise and technical." \
+        }' | jq .
+
+# Switch system prompt to pirate mode
+demo-prompt:
+    curl -s -X PUT {{ _hub_url }}/demo-agent \
+        -H "Content-Type: application/json" \
+        -d '{ \
+            "agentId": "demo-agent", \
+            "name": "Conference Demo Agent", \
+            "modelProvider": "ANTHROPIC", \
+            "modelId": "claude-3-sonnet-20240229", \
+            "temperature": 0.7, \
+            "maxTokens": 1024, \
+            "systemPrompt": "You are a pirate assistant. Respond in pirate speak. Arrr!" \
+        }' | jq .
+
+# Switch to OpenAI provider
+demo-openai:
+    curl -s -X PUT {{ _hub_url }}/demo-agent \
+        -H "Content-Type: application/json" \
+        -d '{ \
+            "agentId": "demo-agent", \
+            "name": "Conference Demo Agent", \
+            "modelProvider": "OPENAI", \
+            "modelId": "gpt-4-turbo-preview", \
+            "temperature": 0.7, \
+            "maxTokens": 1024, \
+            "systemPrompt": "You are a helpful assistant at a developer conference." \
+        }' | jq .
+
+# BREAK the contract (invalid temperature)
+demo-break:
+    curl -s -X PUT {{ _hub_url }}/demo-agent \
+        -H "Content-Type: application/json" \
+        -d '{ \
+            "agentId": "demo-agent", \
+            "name": "Conference Demo Agent", \
+            "modelProvider": "ANTHROPIC", \
+            "modelId": "claude-3-sonnet-20240229", \
+            "temperature": 5.0, \
+            "maxTokens": 1024 \
+        }' | jq .
+
+# Delete the demo agent
+demo-delete:
+    curl -s -X DELETE {{ _hub_url }}/demo-agent
+
+# List all agents
+demo-list:
+    curl -s {{ _hub_url }} | jq .

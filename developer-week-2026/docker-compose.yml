@@ -1,0 +1,106 @@
+services:
+  # MongoDB Replica Set (required for change streams)
+  mongo1:
+    image: mongo:8.0
+    container_name: mongo1
+    command: mongod --replSet rs0 --bind_ip_all
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo1_data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - demo-network
+
+  # MongoDB replica set initializer
+  mongo-init:
+    image: mongo:8.0
+    container_name: mongo-init
+    depends_on:
+      mongo1:
+        condition: service_healthy
+    command: >
+      mongosh --host mongo1:27017 --eval '
+        rs.initiate({
+          _id: "rs0",
+          members: [{ _id: 0, host: "mongo1:27017" }]
+        });
+
+        // Wait for primary
+        while (!rs.isMaster().ismaster) { sleep(1000); }
+
+        // Create database and collection with schema validation
+        db = db.getSiblingDB("hub_db");
+        db.createCollection("agentConfigs", {
+          validator: {
+            $$jsonSchema: {
+              bsonType: "object",
+              required: ["agentId", "name", "modelProvider", "modelId", "temperature"],
+              properties: {
+                agentId: { bsonType: "string", pattern: "^[a-z0-9-]+$" },
+                name: { bsonType: "string", minLength: 1, maxLength: 100 },
+                modelProvider: { bsonType: "string", enum: ["OPENAI", "ANTHROPIC", "GOOGLE", "MISTRAL"] },
+                modelId: { bsonType: "string" },
+                temperature: { bsonType: "number", minimum: 0, maximum: 2 },
+                maxTokens: { bsonType: "int", minimum: 1, maximum: 128000 },
+                systemPrompt: { bsonType: "string" },
+                tools: { bsonType: "array", items: { bsonType: "string" } },
+                metadata: { bsonType: "object" },
+                version: { bsonType: "int", minimum: 0 },
+                updatedAt: { bsonType: "date" }
+              }
+            }
+          },
+          validationLevel: "strict",
+          validationAction: "error"
+        });
+
+        // Enable pre-images for change streams
+        db.runCommand({
+          collMod: "agentConfigs",
+          changeStreamPreAndPostImages: { enabled: true }
+        });
+
+        // Create indexes
+        db.agentConfigs.createIndex({ agentId: 1 }, { unique: true });
+
+        print("MongoDB initialization complete!");
+      '
+    networks:
+      - demo-network
+
+  # Microcks for contract testing
+  microcks:
+    image: quay.io/microcks/microcks:1.10.0
+    container_name: microcks
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATA_MONGODB_URI=mongodb://microcks-mongo:27017/microcks
+      - KEYCLOAK_ENABLED=false
+    depends_on:
+      - microcks-mongo
+    networks:
+      - demo-network
+
+  microcks-mongo:
+    image: mongo:6.0
+    container_name: microcks-mongo
+    volumes:
+      - microcks_mongo_data:/data/db
+    networks:
+      - demo-network
+
+volumes:
+  mongo1_data:
+  microcks_mongo_data:
+
+networks:
+  demo-network:
+    driver: bridge

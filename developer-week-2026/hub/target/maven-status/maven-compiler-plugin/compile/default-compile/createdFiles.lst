@@ -1,0 +1,6 @@
+com/example/hub/HubApplication.class
+com/example/hub/model/AgentConfig$ModelProvider.class
+com/example/hub/model/AgentConfig.class
+com/example/hub/repository/AgentConfigRepository.class
+com/example/hub/controller/AgentConfigController.class
+com/example/hub/model/AgentConfig$AgentConfigBuilder.class
