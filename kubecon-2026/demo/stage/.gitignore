@@ -1,0 +1,18 @@
+# Local credentials and runtime state. Never commit .env or recorded artifacts.
+.env
+.env.*
+!.env.example
+artifacts/
+.hindsight-data/
+.cache/
+.local/
+.config/
+.venv/
+.app-venv/
+.server-venv/
+__pycache__/
+.pytest_cache/
+.chainlit/
+.files/
+node_modules/
+*.log
