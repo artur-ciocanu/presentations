@@ -2,3 +2,29 @@
 **/package-lock.json
 .DS_Store
 **/.DS_Store
+
+# Local environment variables (keep sanitized examples shareable).
+.env
+.env.*
+!.env.example
+
+# Python bytecode, environments, and development caches.
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+
+# Local build output and worktrees.
+target/
+.gradle/
+.worktrees/

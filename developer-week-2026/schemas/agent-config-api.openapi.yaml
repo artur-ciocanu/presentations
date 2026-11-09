@@ -1,0 +1,110 @@
+openapi: 3.1.0
+info:
+  title: Agent Configuration API
+  version: 1.0.0
+  description: |
+    REST API for managing agent configurations.
+    Reuses the shared JSON Schema contract for request/response payloads.
+
+servers:
+  - url: http://localhost:8081
+    description: Local Hub service
+
+paths:
+  /api/v1/agents:
+    get:
+      operationId: listAgents
+      summary: List agent configurations
+      responses:
+        '200':
+          description: Agent configurations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AgentConfiguration'
+              examples:
+                default:
+                  value:
+                    - agentId: demo-agent
+                      name: Conference Demo Agent
+                      modelProvider: ANTHROPIC
+                      modelId: claude-opus-4-6
+                      temperature: 0.7
+                      maxTokens: 1024
+                      systemPrompt: You are a helpful assistant at a developer conference.
+    post:
+      operationId: createAgent
+      summary: Create an agent configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentConfiguration'
+      responses:
+        '201':
+          description: Agent created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentConfiguration'
+        '400':
+          description: Validation error
+        '409':
+          description: Agent already exists
+
+  /api/v1/agents/{agentId}:
+    parameters:
+      - name: agentId
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: '^[a-z0-9-]+$'
+    get:
+      operationId: getAgent
+      summary: Get an agent configuration by agentId
+      responses:
+        '200':
+          description: Agent configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentConfiguration'
+        '404':
+          description: Agent not found
+    put:
+      operationId: updateAgent
+      summary: Update an existing agent configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentConfiguration'
+      responses:
+        '200':
+          description: Agent updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentConfiguration'
+        '400':
+          description: Validation error
+        '404':
+          description: Agent not found
+    delete:
+      operationId: deleteAgent
+      summary: Delete an agent configuration
+      responses:
+        '204':
+          description: Agent deleted
+        '404':
+          description: Agent not found
+
+components:
+  schemas:
+    AgentConfiguration:
+      $ref: './agent-config.schema.json'

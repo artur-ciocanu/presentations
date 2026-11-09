@@ -8,7 +8,7 @@ Chainlit sessions when configurations change.
 import asyncio
 import logging
 from typing import Callable, Dict, Any, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
@@ -16,6 +16,20 @@ from jsonschema import validate, ValidationError
 import json
 
 logger = logging.getLogger(__name__)
+
+
+def _normalize_for_schema(value: Any) -> Any:
+    """Convert driver-native values into JSON-compatible schema values."""
+    if isinstance(value, datetime):
+        # MongoDB dates are decoded as datetime objects; schema expects date-time strings.
+        if value.tzinfo is None:
+            value = value.replace(tzinfo=timezone.utc)
+        return value.isoformat()
+    if isinstance(value, dict):
+        return {k: _normalize_for_schema(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_normalize_for_schema(v) for v in value]
+    return value
 
 
 class AgentConfig(BaseModel):
@@ -166,7 +180,7 @@ class ChangeStreamConsumer:
     def _validate_document(self, document: Dict[str, Any]) -> None:
         """Validate document against JSON Schema contract."""
         # Remove MongoDB-specific fields before validation
-        doc_copy = {k: v for k, v in document.items() if not k.startswith("_")}
+        doc_copy = {k: _normalize_for_schema(v) for k, v in document.items() if not k.startswith("_")}
         validate(instance=doc_copy, schema=self.schema)
 
 

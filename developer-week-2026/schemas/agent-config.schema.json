@@ -29,7 +29,7 @@
     "temperature": {
       "type": "number",
       "minimum": 0,
-      "maximum": 2,
+      "maximum": 1,
       "description": "Sampling temperature for model responses"
     },
     "maxTokens": {

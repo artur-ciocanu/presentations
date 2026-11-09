@@ -53,6 +53,7 @@ public class AgentConfigController {
 
         config.setId(existing.getId());
         config.setAgentId(agentId);
+        config.setVersion(existing.getVersion());
         config.setUpdatedAt(Instant.now());
 
         return repository.save(config);

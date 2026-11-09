@@ -36,9 +36,6 @@ public class AgentConfig {
     @NotBlank
     private String modelId;
 
-    @NotNull
-    @DecimalMin("0.0")
-    @DecimalMax("2.0")
     private Double temperature;
 
     @Min(1)

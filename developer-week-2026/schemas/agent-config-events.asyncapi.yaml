@@ -68,6 +68,40 @@ components:
         $ref: '#/components/schemas/ChangeStreamHeaders'
       payload:
         $ref: '#/components/schemas/InsertEventPayload'
+      examples:
+        - name: insert-demo-agent
+          summary: Demo insert event for a new Anthropic-backed agent
+          headers:
+            x-resume-token: "8267C9C3A9000000012B042C0100296E5A10049A9D5E79C0F7431FAAA0004F9A2B4F46645F6964006467C9C3A9F384A148590FF6D1"
+            x-cluster-time: "Timestamp(1739989200, 1)"
+            x-wall-time: "2026-02-20T10:00:00Z"
+          payload:
+            _id:
+              _data: "8267C9C3A9000000012B042C0100296E5A10049A9D5E79C0F7431FAAA0004F9A2B4F46645F6964006467C9C3A9F384A148590FF6D1"
+            operationType: insert
+            ns:
+              db: hub_db
+              coll: agentConfigs
+            documentKey:
+              _id: "67c9c3a9f384a148590ff6d1"
+            fullDocument:
+              agentId: demo-agent
+              name: Conference Demo Agent
+              modelProvider: ANTHROPIC
+              modelId: claude-opus-4-6
+              temperature: 0.7
+              maxTokens: 1024
+              systemPrompt: You are a helpful assistant at a developer conference. Be concise and technical.
+              tools:
+                - web_search
+                - code_interpreter
+              metadata:
+                demo: true
+                conference: DeveloperWeek 2026
+              version: 0
+              updatedAt: "2026-02-20T10:00:00Z"
+            clusterTime: "Timestamp(1739989200, 1)"
+            wallTime: "2026-02-20T10:00:00Z"
 
     AgentConfigUpdateEvent:
       name: AgentConfigUpdateEvent
@@ -78,6 +112,49 @@ components:
         $ref: '#/components/schemas/ChangeStreamHeaders'
       payload:
         $ref: '#/components/schemas/UpdateEventPayload'
+      examples:
+        - name: update-temperature
+          summary: Demo update event showing changed temperature and prompt
+          headers:
+            x-resume-token: "8267C9C3D5000000012B042C0100296E5A10049A9D5E79C0F7431FAAA0004F9A2B4F46645F6964006467C9C3A9F384A148590FF6D1"
+            x-cluster-time: "Timestamp(1739989237, 1)"
+            x-wall-time: "2026-02-20T10:00:37Z"
+          payload:
+            _id:
+              _data: "8267C9C3D5000000012B042C0100296E5A10049A9D5E79C0F7431FAAA0004F9A2B4F46645F6964006467C9C3A9F384A148590FF6D1"
+            operationType: update
+            ns:
+              db: hub_db
+              coll: agentConfigs
+            documentKey:
+              _id: "67c9c3a9f384a148590ff6d1"
+            fullDocument:
+              agentId: demo-agent
+              name: Conference Demo Agent
+              modelProvider: ANTHROPIC
+              modelId: claude-opus-4-6
+              temperature: 0.9
+              maxTokens: 1024
+              systemPrompt: You are a pirate assistant. Respond in pirate speak. Arrr!
+              version: 1
+              updatedAt: "2026-02-20T10:00:37Z"
+            fullDocumentBeforeChange:
+              agentId: demo-agent
+              name: Conference Demo Agent
+              modelProvider: ANTHROPIC
+              modelId: claude-opus-4-6
+              temperature: 0.7
+              maxTokens: 1024
+              systemPrompt: You are a helpful assistant at a developer conference. Be concise and technical.
+              version: 0
+              updatedAt: "2026-02-20T10:00:00Z"
+            updateDescription:
+              updatedFields:
+                temperature: 0.9
+                systemPrompt: You are a pirate assistant. Respond in pirate speak. Arrr!
+              removedFields: []
+            clusterTime: "Timestamp(1739989237, 1)"
+            wallTime: "2026-02-20T10:00:37Z"
 
     AgentConfigDeleteEvent:
       name: AgentConfigDeleteEvent
@@ -88,6 +165,34 @@ components:
         $ref: '#/components/schemas/ChangeStreamHeaders'
       payload:
         $ref: '#/components/schemas/DeleteEventPayload'
+      examples:
+        - name: delete-demo-agent
+          summary: Demo delete event containing previous full document
+          headers:
+            x-resume-token: "8267C9C3F0000000012B042C0100296E5A10049A9D5E79C0F7431FAAA0004F9A2B4F46645F6964006467C9C3A9F384A148590FF6D1"
+            x-cluster-time: "Timestamp(1739989264, 1)"
+            x-wall-time: "2026-02-20T10:01:04Z"
+          payload:
+            _id:
+              _data: "8267C9C3F0000000012B042C0100296E5A10049A9D5E79C0F7431FAAA0004F9A2B4F46645F6964006467C9C3A9F384A148590FF6D1"
+            operationType: delete
+            ns:
+              db: hub_db
+              coll: agentConfigs
+            documentKey:
+              _id: "67c9c3a9f384a148590ff6d1"
+            fullDocumentBeforeChange:
+              agentId: demo-agent
+              name: Conference Demo Agent
+              modelProvider: ANTHROPIC
+              modelId: claude-opus-4-6
+              temperature: 0.9
+              maxTokens: 1024
+              systemPrompt: You are a pirate assistant. Respond in pirate speak. Arrr!
+              version: 2
+              updatedAt: "2026-02-20T10:01:00Z"
+            clusterTime: "Timestamp(1739989264, 1)"
+            wallTime: "2026-02-20T10:01:04Z"
 
   schemas:
     ChangeStreamHeaders:

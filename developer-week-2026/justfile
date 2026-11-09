@@ -8,6 +8,7 @@ default:
 
 # Start MongoDB replica set and Microcks
 infra:
+    uv run python scripts/generate_mongo_validator.py
     docker compose up -d
 
 # Stop all infrastructure
@@ -45,7 +46,6 @@ edge:
 # --- Demo Scenarios ---
 
 _hub_url := "http://localhost:8081/api/v1/agents"
-
 # Create initial agent configuration
 demo-create:
     curl -s -X POST {{ _hub_url }} \
@@ -54,26 +54,12 @@ demo-create:
             "agentId": "demo-agent", \
             "name": "Conference Demo Agent", \
             "modelProvider": "ANTHROPIC", \
-            "modelId": "claude-3-sonnet-20240229", \
+            "modelId": "claude-opus-4-6", \
             "temperature": 0.7, \
             "maxTokens": 1024, \
             "systemPrompt": "You are a helpful assistant at a developer conference. Be concise and technical.", \
             "tools": ["web_search", "code_interpreter"], \
             "metadata": {"demo": true, "conference": "DeveloperWeek 2026"} \
-        }' | jq .
-
-# Update agent temperature (default: 1.5)
-demo-temp value="1.5":
-    curl -s -X PUT {{ _hub_url }}/demo-agent \
-        -H "Content-Type: application/json" \
-        -d '{ \
-            "agentId": "demo-agent", \
-            "name": "Conference Demo Agent", \
-            "modelProvider": "ANTHROPIC", \
-            "modelId": "claude-3-sonnet-20240229", \
-            "temperature": {{ value }}, \
-            "maxTokens": 1024, \
-            "systemPrompt": "You are a helpful assistant at a developer conference. Be concise and technical." \
         }' | jq .
 
 # Switch system prompt to pirate mode
@@ -84,21 +70,21 @@ demo-prompt:
             "agentId": "demo-agent", \
             "name": "Conference Demo Agent", \
             "modelProvider": "ANTHROPIC", \
-            "modelId": "claude-3-sonnet-20240229", \
+            "modelId": "claude-opus-4-6", \
             "temperature": 0.7, \
             "maxTokens": 1024, \
             "systemPrompt": "You are a pirate assistant. Respond in pirate speak. Arrr!" \
         }' | jq .
 
-# Switch to OpenAI provider
-demo-openai:
+# Switch to OpenAI provider (Azure OpenAI client in Edge service)
+demo-openai deployment="gpt-5.2-chat":
     curl -s -X PUT {{ _hub_url }}/demo-agent \
         -H "Content-Type: application/json" \
         -d '{ \
             "agentId": "demo-agent", \
             "name": "Conference Demo Agent", \
             "modelProvider": "OPENAI", \
-            "modelId": "gpt-4-turbo-preview", \
+            "modelId": "{{ deployment }}", \
             "temperature": 0.7, \
             "maxTokens": 1024, \
             "systemPrompt": "You are a helpful assistant at a developer conference." \
@@ -112,7 +98,7 @@ demo-break:
             "agentId": "demo-agent", \
             "name": "Conference Demo Agent", \
             "modelProvider": "ANTHROPIC", \
-            "modelId": "claude-3-sonnet-20240229", \
+            "modelId": "claude-opus-4-6", \
             "temperature": 5.0, \
             "maxTokens": 1024 \
         }' | jq .

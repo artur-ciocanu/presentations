@@ -35,29 +35,25 @@ services:
 
         // Create database and collection with schema validation
         db = db.getSiblingDB("hub_db");
-        db.createCollection("agentConfigs", {
+        const schema = JSON.parse(cat("/schemas/agent-config.mongodb.schema.json"));
+        const validatorConfig = {
           validator: {
-            $$jsonSchema: {
-              bsonType: "object",
-              required: ["agentId", "name", "modelProvider", "modelId", "temperature"],
-              properties: {
-                agentId: { bsonType: "string", pattern: "^[a-z0-9-]+$" },
-                name: { bsonType: "string", minLength: 1, maxLength: 100 },
-                modelProvider: { bsonType: "string", enum: ["OPENAI", "ANTHROPIC", "GOOGLE", "MISTRAL"] },
-                modelId: { bsonType: "string" },
-                temperature: { bsonType: "number", minimum: 0, maximum: 2 },
-                maxTokens: { bsonType: "int", minimum: 1, maximum: 128000 },
-                systemPrompt: { bsonType: "string" },
-                tools: { bsonType: "array", items: { bsonType: "string" } },
-                metadata: { bsonType: "object" },
-                version: { bsonType: "int", minimum: 0 },
-                updatedAt: { bsonType: "date" }
-              }
-            }
+            $$jsonSchema: schema
           },
           validationLevel: "strict",
           validationAction: "error"
-        });
+        };
+        const hasCollection = db.getCollectionNames().includes("agentConfigs");
+        if (!hasCollection) {
+          db.createCollection("agentConfigs", validatorConfig);
+        } else {
+          db.runCommand({
+            collMod: "agentConfigs",
+            validator: validatorConfig.validator,
+            validationLevel: validatorConfig.validationLevel,
+            validationAction: validatorConfig.validationAction
+          });
+        }
 
         // Enable pre-images for change streams
         db.runCommand({
@@ -70,6 +66,8 @@ services:
 
         print("MongoDB initialization complete!");
       '
+    volumes:
+      - ./schemas:/schemas:ro
     networks:
       - demo-network
 

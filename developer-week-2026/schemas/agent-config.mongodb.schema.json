@@ -1,0 +1,74 @@
+{
+  "bsonType": "object",
+  "required": [
+    "agentId",
+    "name",
+    "modelProvider",
+    "modelId",
+    "temperature"
+  ],
+  "properties": {
+    "agentId": {
+      "bsonType": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Unique agent identifier (lowercase alphanumeric with hyphens)"
+    },
+    "name": {
+      "bsonType": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "Human-readable agent name"
+    },
+    "modelProvider": {
+      "bsonType": "string",
+      "enum": [
+        "OPENAI",
+        "ANTHROPIC",
+        "GOOGLE",
+        "MISTRAL"
+      ],
+      "description": "LLM provider"
+    },
+    "modelId": {
+      "bsonType": "string",
+      "description": "Specific model identifier (e.g., gpt-4, claude-3)"
+    },
+    "temperature": {
+      "bsonType": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Sampling temperature for model responses"
+    },
+    "maxTokens": {
+      "bsonType": "int",
+      "minimum": 1,
+      "maximum": 128000,
+      "description": "Maximum tokens in response"
+    },
+    "systemPrompt": {
+      "bsonType": "string",
+      "description": "System instruction for the agent"
+    },
+    "tools": {
+      "bsonType": "array",
+      "description": "List of enabled tool names",
+      "items": {
+        "bsonType": "string"
+      }
+    },
+    "metadata": {
+      "bsonType": "object",
+      "description": "Flexible key-value pairs for custom data",
+      "additionalProperties": true
+    },
+    "version": {
+      "bsonType": "int",
+      "minimum": 0,
+      "description": "Configuration version for optimistic locking"
+    },
+    "updatedAt": {
+      "bsonType": "date",
+      "description": "Last update timestamp"
+    }
+  }
+}
