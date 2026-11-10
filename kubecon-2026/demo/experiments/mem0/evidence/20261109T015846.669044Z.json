@@ -1,0 +1,269 @@
+{
+  "started_at": "2026-11-09T01:58:46.669469+00:00",
+  "versions": {
+    "mem0ai": "2.2.1",
+    "python": "3.12.13",
+    "sentence-transformers": "6.2.0",
+    "embedder_model": "sentence-transformers/all-MiniLM-L6-v2"
+  },
+  "llm_model": "gpt-6-luna",
+  "config": {
+    "llm": {
+      "provider": "openai",
+      "model": "gpt-6-luna",
+      "openai_base_url": "[read from stage/.env]",
+      "api_key": "[read from stage/.env]"
+    },
+    "embedder": {
+      "provider": "huggingface",
+      "model": "sentence-transformers/all-MiniLM-L6-v2",
+      "embedding_dims": 384
+    },
+    "vector_store": {
+      "provider": "qdrant",
+      "embedding_model_dims": 384,
+      "path": "separate new on-disk directory per run"
+    },
+    "history_db_path": "separate new SQLite file per run",
+    "prompts": "Mem0 defaults; no custom prompt or instructions",
+    "telemetry": "disabled",
+    "scope_api": {
+      "get_all": "filters",
+      "search": "filters"
+    }
+  },
+  "inputs": {
+    "initial": [
+      {
+        "role": "user",
+        "content": "I'm booking a long flight for me and my mom. She has diabetes. I want to avoid anything with cinnamon."
+      },
+      {
+        "role": "assistant",
+        "content": "Got it. I'll look at the in-flight meal options for both of you."
+      }
+    ],
+    "correction": [
+      {
+        "role": "user",
+        "content": "Actually, cinnamon is fine now."
+      },
+      {
+        "role": "assistant",
+        "content": "Thanks, noted."
+      }
+    ],
+    "queries": [
+      "What health conditions does the user have?",
+      "Does Artur have diabetes?",
+      "Does Artur have any allergies?",
+      "What should we avoid serving Artur?",
+      "What do we know about Artur's mom?"
+    ],
+    "user_id": "artur"
+  },
+  "runs": [
+    {
+      "run": 1,
+      "started_at": "2026-11-09T01:58:49.441562+00:00",
+      "operations": {
+        "initialize": {
+          "timestamp": "2026-11-09T02:00:34.830926+00:00",
+          "output": "ok"
+        },
+        "empty_store_get_all": {
+          "timestamp": "2026-11-09T02:00:34.831392+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "initial_add": {
+          "timestamp": "2026-11-09T02:00:36.043116+00:00",
+          "error": "LLMError: LLM extraction failed: Error code: 400 - Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead."
+        },
+        "initial_get_all": {
+          "timestamp": "2026-11-09T02:00:36.044564+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "search_1": {
+          "timestamp": "2026-11-09T02:00:36.202374+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "search_2": {
+          "timestamp": "2026-11-09T02:00:36.961074+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "search_3": {
+          "timestamp": "2026-11-09T02:00:37.100483+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "search_4": {
+          "timestamp": "2026-11-09T02:00:37.108165+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "search_5": {
+          "timestamp": "2026-11-09T02:00:37.244212+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "correction_add": {
+          "timestamp": "2026-11-09T02:00:37.413238+00:00",
+          "error": "LLMError: LLM extraction failed: Error code: 400 - Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead."
+        },
+        "correction_get_all": {
+          "timestamp": "2026-11-09T02:00:37.413762+00:00",
+          "output": {
+            "results": []
+          }
+        }
+      },
+      "finished_at": "2026-11-09T02:00:37.414187+00:00"
+    },
+    {
+      "run": 2,
+      "started_at": "2026-11-09T02:00:37.414412+00:00",
+      "operations": {
+        "initialize": {
+          "timestamp": "2026-11-09T02:00:37.858576+00:00",
+          "output": "ok"
+        },
+        "empty_store_get_all": {
+          "timestamp": "2026-11-09T02:00:37.860803+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "initial_add": {
+          "timestamp": "2026-11-09T02:00:38.368792+00:00",
+          "error": "LLMError: LLM extraction failed: Error code: 400 - Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead."
+        },
+        "initial_get_all": {
+          "timestamp": "2026-11-09T02:00:38.370071+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "search_1": {
+          "timestamp": "2026-11-09T02:00:38.387687+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "search_2": {
+          "timestamp": "2026-11-09T02:00:38.397033+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "search_3": {
+          "timestamp": "2026-11-09T02:00:38.405759+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "search_4": {
+          "timestamp": "2026-11-09T02:00:38.412558+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "search_5": {
+          "timestamp": "2026-11-09T02:00:38.421159+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "correction_add": {
+          "timestamp": "2026-11-09T02:00:38.621296+00:00",
+          "error": "LLMError: LLM extraction failed: Error code: 400 - Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead."
+        },
+        "correction_get_all": {
+          "timestamp": "2026-11-09T02:00:38.622967+00:00",
+          "output": {
+            "results": []
+          }
+        }
+      },
+      "finished_at": "2026-11-09T02:00:38.623974+00:00"
+    },
+    {
+      "run": 3,
+      "started_at": "2026-11-09T02:00:38.624772+00:00",
+      "operations": {
+        "initialize": {
+          "timestamp": "2026-11-09T02:00:39.066260+00:00",
+          "output": "ok"
+        },
+        "empty_store_get_all": {
+          "timestamp": "2026-11-09T02:00:39.066593+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "initial_add": {
+          "timestamp": "2026-11-09T02:00:39.454942+00:00",
+          "error": "LLMError: LLM extraction failed: Error code: 400 - Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead."
+        },
+        "initial_get_all": {
+          "timestamp": "2026-11-09T02:00:39.456331+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "search_1": {
+          "timestamp": "2026-11-09T02:00:39.479766+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "search_2": {
+          "timestamp": "2026-11-09T02:00:39.487989+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "search_3": {
+          "timestamp": "2026-11-09T02:00:39.494093+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "search_4": {
+          "timestamp": "2026-11-09T02:00:39.501332+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "search_5": {
+          "timestamp": "2026-11-09T02:00:39.508513+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "correction_add": {
+          "timestamp": "2026-11-09T02:00:39.731976+00:00",
+          "error": "LLMError: LLM extraction failed: Error code: 400 - Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead."
+        },
+        "correction_get_all": {
+          "timestamp": "2026-11-09T02:00:39.733065+00:00",
+          "output": {
+            "results": []
+          }
+        }
+      },
+      "finished_at": "2026-11-09T02:00:39.734075+00:00"
+    }
+  ],
+  "finished_at": "2026-11-09T02:00:39.734808+00:00"
+}

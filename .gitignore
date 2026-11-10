@@ -28,3 +28,6 @@ htmlcov/
 target/
 .gradle/
 .worktrees/
+
+# KubeCon working material, kept locally only.
+/kubecon-2026/archive/

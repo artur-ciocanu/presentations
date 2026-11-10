@@ -1,0 +1,41 @@
+set shell := ["/bin/sh", "-cu"]
+
+# List stage commands.
+default:
+    @just --list
+
+# Start the isolated Hindsight API in the foreground. This is not yet the full stage kit.
+up:
+    @.venv/bin/python -Es server.py
+
+# Preparation only: download the two public models into the stage-local cache.
+warm-models:
+    @.venv/bin/python -Es isolated.py warm_models.py
+
+# Start the local Chainlit UI in the foreground.
+app:
+    @.venv/bin/python -Es ui_server.py app
+
+# Start the local Hindsight control plane in the foreground.
+control:
+    @.venv/bin/python -Es ui_server.py control
+
+# Run the live architecture walkthrough against the running API.
+architecture:
+    @.venv/bin/python -Es isolated.py architecture.py
+
+# Recall from an existing bank using the native MCP endpoint.
+mcp-recall bank:
+    @.venv/bin/python -Es isolated.py mcp_recall.py {{quote(bank)}}
+
+# Measure warm recall and the local reranker phase against an existing bank.
+bench-recall bank:
+    @.venv/bin/python -Es isolated.py benchmark_recall.py {{quote(bank)}}
+
+# Run the real first flight turn against the running API and LLM.
+smoke:
+    @.venv/bin/python -Es isolated.py smoke_demo.py
+
+# Run local unit tests in the isolated environment.
+test:
+    @.venv/bin/python -Es isolated.py run_tests.py

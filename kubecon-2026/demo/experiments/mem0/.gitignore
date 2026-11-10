@@ -1,0 +1,7 @@
+.venv/
+vector_store/
+model_cache/
+.env
+.env.*
+__pycache__/
+artifacts/

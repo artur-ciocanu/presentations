@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1408 600" role="img" aria-labelledby="runs-t runs-d">
+  <title id="runs-t">How it runs</title>
+  <desc id="runs-d">Inside Kubernetes: agents, connected over MCP or REST to our tenant isolation, which sits on top of Hindsight. Outside Kubernetes: managed Postgres from a cloud provider; its backups and point-in-time restore give rollback.</desc>
+  <defs>
+    <marker id="arr-runs" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="head" d="M0 0 L10 5 L0 10 z"/></marker>
+  </defs>
+
+  <rect class="box" x="4" y="4" width="900" height="590" rx="16"/>
+  <text class="t-big" x="36" y="58">Kubernetes</text>
+
+  <rect class="box" x="60" y="96" width="560" height="96" rx="16"/>
+  <text class="t" x="90" y="156">Agents</text>
+  <path class="line" d="M340 192 L340 262" marker-end="url(#arr-runs)"/>
+  <text class="lbl" x="360" y="238">MCP or REST</text>
+  <text class="pen" x="620" y="238">delivery</text>
+
+  <rect class="box" x="60" y="270" width="560" height="96" rx="16"/>
+  <text class="t" x="90" y="330">Our tenant isolation</text>
+  <path class="line" d="M340 366 L340 428" marker-end="url(#arr-runs)"/>
+
+  <rect class="box" x="60" y="436" width="560" height="96" rx="16"/>
+  <text class="t" x="90" y="496">Hindsight</text>
+
+  <path class="line" d="M620 484 L930 484" marker-end="url(#arr-runs)"/>
+
+  <rect class="box" x="938" y="400" width="466" height="168" rx="16"/>
+  <text class="t" x="966" y="458">Managed Postgres</text>
+  <text class="lbl" x="966" y="498">from a cloud provider</text>
+  <text class="lbl" x="966" y="540">backups · point-in-time restore</text>
+
+  <text class="t" x="966" y="300">Rollback comes</text>
+  <text class="t" x="966" y="340">from the database.</text>
+</svg>

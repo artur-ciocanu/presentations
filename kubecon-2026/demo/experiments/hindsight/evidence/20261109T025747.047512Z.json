@@ -1,0 +1,79 @@
+{
+  "kind": "setup_evidence",
+  "experiment_started_at": "2026-11-09T02:44:03Z",
+  "recorded_at": "2026-11-09T02:57:47.047846+00:00",
+  "versions": {
+    "hindsight-api": "1.2.0",
+    "hindsight-api-slim": "1.2.0",
+    "hindsight-client": "1.2.0",
+    "python": "3.12.13",
+    "pg0-embedded": "0.16.1",
+    "sentence-transformers": "6.2.0"
+  },
+  "llm_model": "gpt-6-luna",
+  "llm_provider": "openai-responses",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "reranker_model": "hindsight-ai/hs-rerank-1",
+  "default_observations": true,
+  "default_auto_consolidation": true,
+  "startup_attempts": [
+    {
+      "at": "2026-11-09T02:48:51Z",
+      "result": "Responses API startup verification succeeded; embedded postgres started; model downloads had not finished within 180 seconds. Both model weight files were observed as zero-byte incomplete files several minutes later. Server stopped to retry download transport."
+    },
+    {
+      "at": "2026-11-09T02:54:20Z",
+      "settings_changed": {
+        "HF_HUB_DISABLE_XET": "1"
+      },
+      "reason": "Use HTTPS download transport after Xet stalled; the default models and built-in prompts were unchanged.",
+      "result": "Responses API startup verification succeeded; BAAI/bge-small-en-v1.5 loaded on CPU. Reranker loading was still in progress at last inspection."
+    },
+    {
+      "at": "2026-11-09T03:04:06.619143+00:00",
+      "result": "Downloaded default model files via parallel HTTPS range requests and verified the Hugging Face LFS SHA-256 values; stopped the stalled server and its isolated database, installed the verified reranker blob into its isolated cache, then restarted the server.",
+      "verified_sha256": {
+        "BAAI/bge-small-en-v1.5": "3c9f31665447c8911517620762200d2245a2518d6e7208acc78cd9db317e21ad",
+        "hindsight-ai/hs-rerank-1": "4a3b0d9a505dd9fe810bfa411e23a45c33d6c6d5801e1b680f390edea7db2782"
+      }
+    }
+  ],
+  "note": "Setup-only evidence; not results from retained conversation.",
+  "health_check": {
+    "at": "2026-11-09T03:04:31.961241+00:00",
+    "output": {
+      "status": "healthy",
+      "database": "connected"
+    },
+    "note": "127.0.0.1:8890 /health after isolated model cache seeding; pool timing fields omitted here"
+  },
+  "download_attempts": [
+    {
+      "method": "single HTTPS transfer BGE",
+      "error": "curl: (28) Operation timed out after 599332 milliseconds with 91943706 out of 133466304 bytes received",
+      "retry": "terminated after verified range download succeeded"
+    },
+    {
+      "method": "single HTTPS transfer reranker",
+      "error": "curl: (28) Operation timed out after 599335 milliseconds with 92487001 out of 227593826 bytes received",
+      "retry": "terminated after verified range download succeeded"
+    },
+    {
+      "method": "parallel HTTPS ranges",
+      "result": "Both complete, SHA-256 verified against published Hugging Face LFS values; reranker blob seeded in experiment cache."
+    }
+  ],
+  "model_initialization": {
+    "embedder": {
+      "name": "BAAI/bge-small-en-v1.5",
+      "dimensions": 384,
+      "device": "cpu",
+      "initialized_at": "2026-11-09T03:04:11.333Z"
+    },
+    "reranker": {
+      "name": "hindsight-ai/hs-rerank-1",
+      "device": "cpu",
+      "initialized_at": "2026-11-09T03:04:16.045Z"
+    }
+  }
+}

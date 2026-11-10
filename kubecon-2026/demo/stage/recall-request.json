@@ -1,0 +1,9 @@
+{
+  "query": "What was said about the speaker and their mom, the flight, health, and in-flight meal preferences? Do not infer medical conditions or allergies.",
+  "types": ["world"],
+  "tags": ["task:flight-meals"],
+  "tags_match": "all_strict",
+  "budget": "low",
+  "max_tokens": 1800,
+  "include_chunks": true
+}

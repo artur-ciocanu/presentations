@@ -1,0 +1,370 @@
+<!-- .slide: id="title" class="slide title" -->
+
+<h1>I Rebuilt Agent Memory Three Times. The Third Time I Treated It Like Data.</h1>
+<p class="byline">Artur Ciocanu · KubeCon 2026</p>
+
+Notes: S1
+
+---
+
+<!-- .slide: id="flight" class="slide statement" -->
+
+<p class="who">A user, to a travel assistant</p>
+<p class="bubble">I'm booking a long flight for me and <mark class="mom">my mom. She has diabetes.<sup>1</sup></mark> I want to <mark class="me">avoid<sup>2</sup></mark> anything with <mark class="me">cinnamon.<sup>3</sup></mark></p>
+<ol>
+<li class="mom fragment"><b>1</b>Whose diabetes?</li>
+<li class="me fragment"><b>2</b>A preference, or an allergy?</li>
+<li class="me fragment"><b>3</b>And when I say it's fine now?</li>
+</ol>
+
+Notes: S2
+
+---
+
+<!-- .slide: id="mem0-convention" class="slide quote" -->
+
+<h2>Mem0 documents its memory types as conventions over shared primitives.</h2>
+<blockquote>None of these three types has its own dedicated parameter in Mem0: not semantic, not episodic, not procedural.</blockquote>
+<blockquote>All three are Mem0's same <code>add()</code>/<code>search()</code> primitives, <mark>differentiated by convention</mark> …</blockquote>
+<p class="source">Mem0, “Semantic vs Episodic vs Procedural Memory in AI Agents”</p>
+
+Notes: S3
+
+---
+
+<!-- .slide: id="human-vs-agent" class="slide compare" -->
+
+<h2>Human memory has the opposite requirements from what an agent's knowledge needs.</h2>
+<table>
+<thead><tr><th>Human memory is</th><th>Agent knowledge has to be</th></tr></thead>
+<tbody>
+<tr><td>reconstructive</td><td>authoritative</td></tr>
+<tr><td>lossy</td><td>versioned</td></tr>
+<tr><td>subjective</td><td>consistent</td></tr>
+<tr><td>tolerant of contradiction</td><td>able to detect conflicts</td></tr>
+</tbody>
+</table>
+
+Notes: S4
+
+---
+
+<!-- .slide: id="mem0-stored" class="slide artifact" -->
+
+<h2>In one Mem0 run, the subject was described in the stored text.</h2>
+<div class="cols">
+<div>
+<h3>Stored memory</h3>
+<div class="rec nosubject"><b><span class="op write">WRITE</span>add() · the stored memory</b>User is booking a long flight with their mother, who has diabetes, and wants to avoid in-flight food containing cinnamon.</div>
+</div>
+<div>
+<h3>Mem0's fields</h3>
+<div class="fields stack"><code>id</code><code>memory</code><code>hash</code><code>metadata</code><code>created_at</code><code>updated_at</code><code>user_id</code><code>attributed_to</code></div>
+</div>
+<div>
+<h3>Fields not returned</h3>
+<div class="fields stack"><code class="missing">about whom</code><code class="missing">stated or inferred</code><code class="missing">valid until</code></div>
+</div>
+</div>
+
+Notes: S5
+
+---
+
+<!-- .slide: id="mem0-recall" class="slide artifact" -->
+
+<h2>In three Mem0 runs, a search for Artur's diabetes returned his mother's diabetes first.</h2>
+<div class="rec"><b><span class="op read">READ</span>search() · filters={"user_id": "artur"}</b>Does Artur have diabetes?</div>
+<div class="rec nosubject"><b>Result #1 in runs 1, 2 and 3 · run 1 shown</b>User is booking a long flight with their mother, who has diabetes, and wants to avoid in-flight food containing cinnamon.</div>
+
+Notes: S6
+
+---
+
+<!-- .slide: id="mem0-failures" class="slide compare" -->
+
+<h2>Three observations from the Mem0 runs.</h2>
+<table class="dense">
+<thead><tr><th>Result · 3 runs</th><th>What the returned data showed</th></tr></thead>
+<tbody>
+<tr><td>“Does Artur have diabetes?” returned mom's diabetes first, 3&nbsp;of&nbsp;3</td><td>The returned records had no separate subject field.</td></tr>
+<tr><td>“What do we know about Artur's mom?” missed her diabetes memory, 3&nbsp;of&nbsp;3</td><td>The search did not return that memory.</td></tr>
+<tr><td>“Cinnamon is fine now”: both versions kept, 3&nbsp;of&nbsp;3</td><td>The correction was added; the original remained.</td></tr>
+</tbody>
+</table>
+
+Notes: S7
+
+---
+
+<!-- .slide: id="letta-dreaming" class="slide quote" -->
+
+<h2>In Letta, the agent decides what to keep, and a background job “dreams” on it.</h2>
+<blockquote>The agent decides where the lesson belongs and commits the update to MemFS.</blockquote>
+<blockquote><mark>Dreaming</mark> uses background subagents to review recent conversations, consolidate useful lessons, and update memory …</blockquote>
+<blockquote>… does not ask you for approval.</blockquote>
+<p class="source">Letta docs, “Memory &amp; dreaming”</p>
+
+Notes: S8
+
+---
+
+<!-- .slide: id="understood" class="slide artifact" -->
+
+<h2>In the Letta V1 runs, a request to forget left the message in the history.</h2>
+<div class="rec said"><b>User</b>Please don't keep anything about my mom's health.</div>
+<div class="rec fragment"><b>Agent · Letta</b>Understood. I won't retain or use your mom's health information going forward.</div>
+<div class="rec said fragment"><b>Still in the conversation history · all three V1 runs</b>I'm booking a long flight for me and my mom. She has diabetes. I want to avoid anything with cinnamon.</div>
+
+Notes: S9
+
+---
+
+<!-- .slide: id="letta-failures" class="slide compare" -->
+
+<h2>Across six Letta runs, curated memory and conversation history behaved differently.</h2>
+<table class="dense">
+<thead><tr><th>Observation · 6 runs, two generations</th><th>What we saw</th></tr></thead>
+<tbody>
+<tr><td>No fact went into curated memory, 6&nbsp;of&nbsp;6</td><td>The tested agents did not add these facts to curated memory.</td></tr>
+<tr><td>A reply said “cinnamon allergy or sensitivity”, 1&nbsp;of&nbsp;3 (older server)</td><td>The input did not state an allergy or sensitivity.</td></tr>
+<tr><td>“Don't keep” (older server): no call, three failed edits, a policy note</td><td>No message deletion was observed in the V1 runs.</td></tr>
+<tr><td>The message stayed in history, 6&nbsp;of&nbsp;6</td><td>It was present in the snapshots taken after the request.</td></tr>
+</tbody>
+</table>
+
+Notes: S10
+
+---
+
+<!-- .slide: id="forgetting" class="slide statement" -->
+
+<p class="claim">“Understood” is a sentence.</p>
+<p class="claim">Forgetting is a data operation someone owns.</p>
+
+Notes: S11
+
+---
+
+<!-- .slide: id="records" class="slide artifact" -->
+
+<h2>The missing answers are columns: about whom, stated or inferred, and until when.</h2>
+<table>
+<thead><tr><th>About whom</th><th>Fact</th><th>Category</th><th>Stated / inferred</th><th>Valid until</th></tr></thead>
+<tbody>
+<tr class="mom fragment"><td>Artur's<br>mom</td><td>has diabetes</td><td>health</td><td>stated</td><td>open</td></tr>
+<tr class="me fragment"><td>Artur</td><td>avoid cinnamon</td><td>food_preference</td><td>stated</td><td>open</td></tr>
+<tr class="absent fragment"><td>Artur</td><td>cinnamon allergy</td><td>health</td><td>inferred</td><td>—</td></tr>
+</tbody>
+</table>
+<p class="pen fragment">No allergy record: I never said allergy.</p>
+
+Notes: S12
+
+---
+
+<!-- .slide: id="translation" class="slide compare" -->
+
+<h2>Memory concepts can be described in data terms.</h2>
+<table class="dense">
+<thead><tr><th>Memory concept</th><th>In data terms</th></tr></thead>
+<tbody>
+<tr><td>episodic memory</td><td>events: what happened, and when</td></tr>
+<tr><td>semantic memory</td><td>the user profile: facts about a subject, valid from / to</td></tr>
+<tr><td>procedural memory</td><td>skills, like a SKILL.md: instructions, versioned like code</td></tr>
+<tr><td>dreaming</td><td>a scheduled consolidation job, which needs lineage</td></tr>
+</tbody>
+</table>
+
+Notes: S13
+
+---
+
+<!-- .slide: id="facets" class="slide diagram" -->
+
+<h2>Library science named the fix decades ago: facets and a controlled vocabulary.</h2>
+<div class="figure" data-svg="svg/facets.svg"></div>
+
+Notes: S14
+
+---
+
+<!-- .slide: id="hindsight" class="slide diagram" -->
+
+<h2>In my Hindsight setup, separate facts pointed back to their source.</h2>
+<div class="figure" data-svg="svg/lineage.svg"></div>
+
+Notes: S15
+
+---
+
+<!-- .slide: id="guardrails" class="slide diagram" -->
+
+<h2>My guardrails add the facets where loose is dangerous.</h2>
+<div class="figure" data-svg="svg/guardrails.svg"></div>
+
+Notes: S16
+
+---
+
+<!-- .slide: id="not-retained" class="slide artifact" -->
+
+<h2>In one default Hindsight run, an observation said “not retained” while the fact was still stored.</h2>
+<div class="rec nosubject derived"><b>Observation · consolidated by default</b>Information about the user's mother's health was not retained following the user's request …</div>
+<div class="rec nosubject"><b>World fact · same snapshot</b>User is booking a long flight with their mother, who has diabetes, and wants to avoid anything containing cinnamon. | Involving: user and user's mother | Dietary constraint for the flight.</div>
+<p class="pen">consolidation: off in my setup</p>
+
+Notes: S17
+
+---
+
+<!-- .slide: id="demo-cue" class="slide statement" -->
+
+<p class="claim">Live demo</p>
+
+---
+
+<!-- .slide: id="demo" class="slide artifact" -->
+
+<h2>Live: the same question, with and without a subject filter.</h2>
+<div class="rec said compact"><b><span class="op write">WRITE</span>retain</b>I'm booking a long flight for me and my mom. She has diabetes. I want to avoid anything with cinnamon.</div>
+<div class="rec compact"><b><span class="op read">READ</span>recall · no filter</b>Does Artur have diabetes?</div>
+<div class="rec compact"><b><span class="op read">READ</span>recall · tags: ["subject:user"] · tags_match: "any_strict"</b>Does Artur have diabetes?</div>
+
+Notes: S18
+
+---
+
+<!-- .slide: id="filter-result" class="slide artifact" -->
+
+<h2>The subject filter excludes the mother's diabetes, but not every fact that mentions her.</h2>
+<div class="rec mom"><b>No filter · result #1 · subject:family_member, category:health</b>User's mother has diabetes. | Involving: User's mother</div>
+<div class="rec me"><b>subject:user filter · result #1 · subject:user, category:food_preference</b>User wants to avoid foods containing cinnamon while booking a long flight for themself and their mother. | Involving: User and user's mother</div>
+<p class="pen">The tags are assigned by a model.</p>
+
+Notes: S19
+
+---
+
+<!-- .slide: id="which-wins" class="slide compare" -->
+
+<h2>In these examples, each system kept both cinnamon statements.</h2>
+<div class="cols">
+<div class="col">
+<h3>Mem0</h3>
+<div class="rec nosubject"><b>kept</b>User is booking a long flight with their mother, who has diabetes, and wants to avoid in-flight food containing cinnamon.</div>
+<div class="rec nosubject"><b>added</b>User no longer needs to avoid cinnamon in the in-flight meal options for the long flight with their mother.</div>
+<p class="pen">valid until: —</p>
+</div>
+<div class="col">
+<h3>Letta</h3>
+<div class="rec said"><b>kept in history</b>I want to avoid anything with cinnamon.</div>
+<div class="rec said"><b>added to history</b>Actually, cinnamon is fine now.</div>
+<p class="pen">valid until: —</p>
+</div>
+<div class="col">
+<h3>Hindsight</h3>
+<div class="rec me"><b>kept · state: valid</b>User wants to avoid anything containing cinnamon. | Involving: User</div>
+<div class="rec me"><b>added · state: valid</b>User says cinnamon is fine now. | Involving: user</div>
+<p class="pen">valid until: —</p>
+</div>
+</div>
+
+Notes: S20
+
+---
+
+<!-- .slide: id="erasure" class="slide diagram" -->
+
+<h2>Erasure is an operation, and it has two hard parts: granularity and every copy.</h2>
+<div class="figure" data-svg="svg/erasure.svg"></div>
+
+Notes: S21
+
+---
+
+<!-- .slide: id="runs" class="slide diagram" -->
+
+<h2>It runs like any datastore: everything on Kubernetes except managed Postgres.</h2>
+<div class="figure" data-svg="svg/runs.svg"></div>
+
+Notes: S22
+
+---
+
+<!-- .slide: id="five-fields" class="slide compare" -->
+
+<h2>Enterprise memory needs five fields that answer what the agent can't guess.</h2>
+<table class="dense">
+<thead><tr><th>Field</th><th>The question it answers</th></tr></thead>
+<tbody>
+<tr><td>about whom</td><td>Whose diabetes is it?</td></tr>
+<tr><td>who said it · stated or inferred</td><td>Did anyone say “allergy”?</td></tr>
+<tr><td>when we learned it</td><td>When, and from which message?</td></tr>
+<tr><td>valid from · valid to (SCD Type 2)</td><td>Is it still true? Old row closed, new row current.</td></tr>
+<tr><td>derived from</td><td>What goes when the source goes?</td></tr>
+</tbody>
+</table>
+
+Notes: S23
+
+---
+
+<!-- .slide: id="close-records" class="slide artifact" -->
+
+<h2>Keep vector search and BM25, and add the metadata that pays off over time.</h2>
+<table class="wide">
+<thead><tr><th>About whom</th><th>Fact</th><th>Category</th><th>Source</th><th>When</th><th>Valid until</th></tr></thead>
+<tbody>
+<tr class="mom"><td>Artur's<br>mom</td><td>has diabetes</td><td>health</td><td>user · stated</td><td>turn 1</td><td>open</td></tr>
+<tr class="me"><td>Artur</td><td>avoid cinnamon</td><td>food_preference</td><td>user · stated</td><td>turn 1</td><td>turn 2</td></tr>
+<tr class="me fragment"><td>Artur</td><td>cinnamon is fine</td><td>food_preference</td><td>user · stated</td><td>turn 2</td><td>open</td></tr>
+</tbody>
+</table>
+<p class="pen">No allergy record.</p>
+
+Notes: S24
+
+---
+
+<!-- .slide: id="one-sentence" class="slide statement" -->
+
+<p class="claim">Memory is information architecture.</p>
+<p class="claim">It is not cogsci, and it is not magic.</p>
+
+Notes: S25
+
+---
+
+<!-- .slide: id="references" class="slide end" -->
+
+<h2>References</h2>
+<ol>
+<li>Jessica Talisman, Intentional Arrangement · <a href="https://jessicatalisman.substack.com">jessicatalisman.substack.com</a></li>
+<li>Kurt Cagle, The Ontologist · <a href="https://ontologist.substack.com">ontologist.substack.com</a></li>
+<li>Artur Ciocanu, “Your agent's memory problem is an information architecture problem” · <a href="https://arturciocanu.substack.com/p/your-agents-memory-problem-is-an">arturciocanu.substack.com/p/your-agents-memory-problem-is-an</a></li>
+<li>Mem0, “Semantic vs Episodic vs Procedural Memory in AI Agents” · <a href="https://mem0.ai/library/agent-memory/semantic-vs-episodic-vs-procedural-memory">mem0.ai/library/agent-memory/semantic-vs-episodic-vs-procedural-memory</a></li>
+<li>MemGPT: Towards LLMs as Operating Systems · <a href="https://arxiv.org/abs/2310.08560">arxiv.org/abs/2310.08560</a></li>
+<li>Letta, “Memory &amp; dreaming” · <a href="https://docs.letta.com/configuration/memory">docs.letta.com/configuration/memory</a></li>
+<li>Hindsight is 20/20: Building Agent Memory that Retains, Recalls, and Reflects · <a href="https://arxiv.org/abs/2512.12818">arxiv.org/abs/2512.12818</a> · <a href="https://github.com/vectorize-io/hindsight">github.com/vectorize-io/hindsight</a></li>
+<li>Kimball Group, “Type 2: Add New Row” · <a href="https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/type-2/">kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/type-2</a></li>
+<li>Agent Skills specification (SKILL.md) · <a href="https://agentskills.io/specification">agentskills.io/specification</a></li>
+<li>Dublin Core, DCMI Metadata Terms · <a href="https://www.dublincore.org/specifications/dublin-core/dcmi-terms/">dublincore.org/specifications/dublin-core/dcmi-terms</a> · W3C, PROV-O: The PROV Ontology · <a href="https://www.w3.org/TR/prov-o/">w3.org/TR/prov-o</a></li>
+</ol>
+
+Notes: S26
+
+---
+
+<!-- .slide: id="code-feedback" class="slide end" -->
+
+<div class="qr">
+<div>
+<h2>The experiments and the demo code are public.</h2>
+<p><code><a href="https://github.com/artur-ciocanu/presentations">github.com/artur-ciocanu/presentations</a></code></p>
+<p>Feedback: scan the code.</p>
+</div>
+<img src="assets/feedback-qr.png" alt="QR code for session feedback">
+</div>
+
+Notes: S27

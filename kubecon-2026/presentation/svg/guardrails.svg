@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1408 590" role="img" aria-labelledby="guard-t guard-d">
+  <title id="guard-t">Four guardrails</title>
+  <desc id="guard-d">1, a controlled vocabulary for subject and category. 2, applied as tags on every retain. 3, deterministic extraction in code wherever possible. 4, consolidation off.</desc>
+  <defs>
+  </defs>
+
+  <rect class="box" x="4" y="4" width="684" height="270" rx="16"/>
+  <text class="lbl" x="34" y="50">1 · Controlled vocabulary</text>
+  <text class="t" x="34" y="120">Subject: user, family_member</text>
+  <text class="t" x="34" y="176">Category: health,</text>
+  <text class="t" x="34" y="220">food_preference</text>
+
+  <rect class="box" x="720" y="4" width="684" height="270" rx="16"/>
+  <text class="lbl" x="750" y="50">2 · Applied as tags, on every retain</text>
+  <text class="tag" x="750" y="124">"tag": true</text>
+  <text class="tag" x="750" y="176">tags: ["task:flight-booking"]</text>
+
+  <rect class="box" x="4" y="312" width="684" height="270" rx="16"/>
+  <text class="lbl" x="34" y="358">3 · Deterministic extraction</text>
+  <text class="t" x="34" y="428">In code, wherever possible.</text>
+
+  <rect class="box" x="720" y="312" width="684" height="270" rx="16"/>
+  <text class="lbl" x="750" y="358">4 · Consolidation off</text>
+  <text class="tag" x="750" y="432">"enable_observations": false</text>
+</svg>

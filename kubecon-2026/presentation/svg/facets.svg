@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1408 600" role="img" aria-labelledby="facets-t facets-d">
+  <title id="facets-t">Facets, a controlled vocabulary and identity resolution</title>
+  <desc id="facets-d">The record's columns are facets. The category column takes its values from a controlled vocabulary: health, food_preference. The about-whom column relies on identity resolution: mom, mother and my mom are one person.</desc>
+  <defs>
+  </defs>
+
+  <text class="lbl" x="0" y="26">Facets: the columns</text>
+  <rect class="box" x="2" y="46" width="248" height="84" rx="16"/>
+  <text class="t" x="126" y="100" text-anchor="middle">about whom</text>
+  <rect class="box" x="262" y="46" width="320" height="84" rx="16"/>
+  <text class="t" x="422" y="100" text-anchor="middle">fact</text>
+  <rect class="box" x="594" y="46" width="280" height="84" rx="16"/>
+  <text class="t" x="734" y="100" text-anchor="middle">category</text>
+  <rect class="box" x="886" y="46" width="300" height="84" rx="16"/>
+  <text class="t" x="1036" y="100" text-anchor="middle">stated / inferred</text>
+  <rect class="box" x="1198" y="46" width="208" height="84" rx="16"/>
+  <text class="t" x="1302" y="100" text-anchor="middle">valid until</text>
+
+  <path class="line" d="M734 130 L734 220"/>
+  <rect class="box" x="594" y="220" width="600" height="160" rx="16"/>
+  <text class="lbl" x="622" y="262">Controlled vocabulary: the values</text>
+  <text class="m" x="622" y="312">health</text>
+  <text class="m" x="622" y="352">food_preference</text>
+
+  <path class="line" d="M126 130 L126 430"/>
+  <rect class="box" x="2" y="430" width="560" height="150" rx="16"/>
+  <text class="lbl" x="30" y="472">Identity resolution: a separate job</text>
+  <text class="t" x="30" y="530">“mom” = “mother” = “my mom”</text>
+
+  <text class="lbl" x="1406" y="520" text-anchor="end">The lens comes from</text>
+  <text class="t" x="1406" y="566" text-anchor="end">Jessica Talisman · Kurt Cagle</text>
+</svg>

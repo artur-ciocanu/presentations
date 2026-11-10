@@ -1,0 +1,4 @@
+# One required turn. Corrections and erasure remain undecided, not scripted.
+conversations:
+  - id: initial
+    utterance: "I'm booking a long flight for me and my mom. She has diabetes. I want to avoid anything with cinnamon."

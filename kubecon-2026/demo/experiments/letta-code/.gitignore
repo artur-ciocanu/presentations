@@ -1,0 +1,11 @@
+.venv/
+.home/
+.tmp/
+.letta-local/
+.state/
+.cache/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+*.env

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1408 580" role="img" aria-labelledby="lineage-t lineage-d">
+  <title id="lineage-t">Hindsight lineage</title>
+  <desc id="lineage-d">The source document at the top. Two tagged facts reference it by document_id and chunk_id. A consolidated observation from a separate run with default settings references a fact by source_memory_ids. The facts come from the guardrails run; the figure combines the two runs.</desc>
+  <defs>
+    <marker id="arr-lineage" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="head" d="M0 0 L10 5 L0 10 z"/></marker>
+  </defs>
+
+  <rect class="box said" x="4" y="6" width="1400" height="128" rx="16"/>
+  <text class="lbl" x="32" y="44">Source document · id: initial</text>
+  <text class="m" x="32" y="86">user: I'm booking a long flight for me and my mom. She has diabetes.</text>
+  <text class="m" x="32" y="120">I want to avoid anything with cinnamon.</text>
+
+  <rect class="box mom" x="4" y="200" width="660" height="180" rx="16"/>
+  <text class="lbl" x="32" y="238">Fact</text>
+  <text class="t" x="32" y="282">User's mom has diabetes.</text>
+  <text class="tag" x="32" y="356">subject:family_member · category:health</text>
+
+  <rect class="box me" x="744" y="200" width="660" height="180" rx="16"/>
+  <text class="lbl" x="772" y="238">Fact</text>
+  <text class="t" x="772" y="282">User wants to avoid anything</text>
+  <text class="t" x="772" y="320">containing cinnamon.</text>
+  <text class="tag" x="772" y="356">subject:user · category:food_preference</text>
+
+  <path class="line" d="M334 200 L334 140" marker-end="url(#arr-lineage)"/>
+  <path class="line" d="M1074 200 L1074 140" marker-end="url(#arr-lineage)"/>
+  <text class="pen" x="704" y="180" text-anchor="middle">document_id · chunk_id</text>
+
+  <rect class="box dash nosubject" x="4" y="456" width="660" height="116" rx="16"/>
+  <text class="lbl" x="32" y="496">Observation · defaults run</text>
+  <text class="t" x="32" y="544">The user's mother has diabetes.</text>
+  <path class="line" d="M334 456 L334 386" marker-end="url(#arr-lineage)"/>
+  <text class="pen" x="350" y="432">source_memory_ids</text>
+  <text class="lbl" x="744" y="496">Facts: guardrails run. Observation: defaults run.</text>
+  <text class="lbl" x="744" y="530">Arrows point from a derived record</text>
+  <text class="lbl" x="744" y="564">to the record it came from.</text>
+</svg>

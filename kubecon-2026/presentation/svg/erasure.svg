@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1408 610" role="img" aria-labelledby="erase-t erase-d">
+  <title id="erase-t">Erasing the source document</title>
+  <desc id="erase-d">DELETE on the source document. Deleted: its facts and the observations derived from them. Also deleted: unrelated facts from the same document, the flight and the cinnamon. Still there: the LLM-request trace with the conversation, retention_days 1. Other copies: backups and the model provider.</desc>
+  <defs>
+    <marker id="arr-erase" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="head" d="M0 0 L10 5 L0 10 z"/></marker>
+  </defs>
+
+  <rect class="box" x="4" y="40" width="420" height="190" rx="16"/>
+  <rect class="op-delete" x="30" y="58" width="108" height="34" rx="8"/>
+  <text class="op-text" x="84" y="82" text-anchor="middle">DELETE</text>
+  <text class="tag" x="30" y="132">DELETE …/documents/</text>
+  <text class="tag" x="30" y="166">initial</text>
+  <text class="lbl" x="30" y="208">then GET returns 404</text>
+
+  <path class="line" d="M424 120 C 470 120, 480 58, 528 58" marker-end="url(#arr-erase)"/>
+  <path class="line" d="M424 140 C 470 140, 480 182, 528 182" marker-end="url(#arr-erase)"/>
+  <path class="line" d="M424 160 C 470 170, 480 306, 528 306" marker-end="url(#arr-erase)"/>
+
+  <rect class="box" x="536" y="4" width="868" height="108" rx="16"/>
+  <text class="t" x="566" y="70">Facts from the document</text>
+  <text class="t-big" x="1376" y="72" text-anchor="end">deleted</text>
+
+  <rect class="box dash" x="536" y="128" width="868" height="108" rx="16"/>
+  <text class="t" x="566" y="194">Observations derived from them</text>
+  <text class="t-big" x="1376" y="196" text-anchor="end">deleted</text>
+
+  <rect class="box" x="536" y="252" width="868" height="108" rx="16"/>
+  <text class="t" x="566" y="318">Same document: flight, cinnamon</text>
+  <text class="t-big" x="1376" y="320" text-anchor="end">deleted too</text>
+
+  <rect class="box said" x="536" y="376" width="868" height="108" rx="16"/>
+  <text class="t" x="566" y="424">LLM-request trace, full conversation</text>
+  <text class="tag" x="566" y="462">retention_days: 1</text>
+  <text class="t-big" x="1376" y="444" text-anchor="end">still there</text>
+
+  <rect class="box" x="536" y="500" width="868" height="108" rx="16"/>
+  <text class="t" x="566" y="566">Backups · the model provider</text>
+  <text class="t-big" x="1376" y="568" text-anchor="end">other copies</text>
+
+  <text class="pen" x="510" y="350" text-anchor="end">granularity</text>
+  <text class="pen" x="510" y="500" text-anchor="end">every copy</text>
+</svg>

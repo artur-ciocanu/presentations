@@ -1,0 +1,761 @@
+{
+  "started_at": "2026-11-09T02:00:52.152304+00:00",
+  "versions": {
+    "mem0ai": "2.2.1",
+    "python": "3.12.13",
+    "sentence-transformers": "6.2.0",
+    "embedder_model": "sentence-transformers/all-MiniLM-L6-v2"
+  },
+  "llm_model": "gpt-6-luna",
+  "config": {
+    "llm": {
+      "provider": "openai",
+      "model": "gpt-6-luna",
+      "openai_base_url": "[read from stage/.env]",
+      "api_key": "[read from stage/.env]",
+      "is_reasoning_model": true
+    },
+    "llm_config_change": "After the default provider sent max_tokens and the endpoint rejected it, set is_reasoning_model=True to omit max_tokens and default sampling parameters; prompts unchanged. See earlier artifact for errors.",
+    "embedder": {
+      "provider": "huggingface",
+      "model": "sentence-transformers/all-MiniLM-L6-v2",
+      "embedding_dims": 384
+    },
+    "vector_store": {
+      "provider": "qdrant",
+      "embedding_model_dims": 384,
+      "path": "separate new on-disk directory per run"
+    },
+    "history_db_path": "separate new SQLite file per run",
+    "prompts": "Mem0 defaults; no custom prompt or instructions",
+    "telemetry": "disabled",
+    "scope_api": {
+      "get_all": "filters",
+      "search": "filters"
+    }
+  },
+  "inputs": {
+    "initial": [
+      {
+        "role": "user",
+        "content": "I'm booking a long flight for me and my mom. She has diabetes. I want to avoid anything with cinnamon."
+      },
+      {
+        "role": "assistant",
+        "content": "Got it. I'll look at the in-flight meal options for both of you."
+      }
+    ],
+    "correction": [
+      {
+        "role": "user",
+        "content": "Actually, cinnamon is fine now."
+      },
+      {
+        "role": "assistant",
+        "content": "Thanks, noted."
+      }
+    ],
+    "queries": [
+      "What health conditions does the user have?",
+      "Does Artur have diabetes?",
+      "Does Artur have any allergies?",
+      "What should we avoid serving Artur?",
+      "What do we know about Artur's mom?"
+    ],
+    "user_id": "artur"
+  },
+  "runs": [
+    {
+      "run": 1,
+      "started_at": "2026-11-09T02:00:52.604835+00:00",
+      "operations": {
+        "initialize": {
+          "timestamp": "2026-11-09T02:00:57.273483+00:00",
+          "output": "ok"
+        },
+        "empty_store_get_all": {
+          "timestamp": "2026-11-09T02:00:57.275091+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "initial_add": {
+          "timestamp": "2026-11-09T02:00:59.992739+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "fe4b4a44-0fb8-47c7-9450-7c17712038ee",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid in-flight food containing cinnamon.",
+                "event": "ADD"
+              }
+            ]
+          }
+        },
+        "initial_get_all": {
+          "timestamp": "2026-11-09T02:00:59.993223+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "fe4b4a44-0fb8-47c7-9450-7c17712038ee",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid in-flight food containing cinnamon.",
+                "hash": "8d68b4b27f21a1b55ea12862d0237834",
+                "metadata": null,
+                "created_at": "2026-11-09T02:00:59.989351+00:00",
+                "updated_at": "2026-11-09T02:00:59.989351+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              }
+            ]
+          }
+        },
+        "search_1": {
+          "timestamp": "2026-11-09T02:01:00.001681+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "fe4b4a44-0fb8-47c7-9450-7c17712038ee",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid in-flight food containing cinnamon.",
+                "hash": "8d68b4b27f21a1b55ea12862d0237834",
+                "metadata": null,
+                "score": 0.30173120829879996,
+                "created_at": "2026-11-09T02:00:59.989351+00:00",
+                "updated_at": "2026-11-09T02:00:59.989351+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              }
+            ]
+          }
+        },
+        "search_2": {
+          "timestamp": "2026-11-09T02:01:00.118767+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "fe4b4a44-0fb8-47c7-9450-7c17712038ee",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid in-flight food containing cinnamon.",
+                "hash": "8d68b4b27f21a1b55ea12862d0237834",
+                "metadata": null,
+                "score": 0.33881776759118426,
+                "created_at": "2026-11-09T02:00:59.989351+00:00",
+                "updated_at": "2026-11-09T02:00:59.989351+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              }
+            ]
+          }
+        },
+        "search_3": {
+          "timestamp": "2026-11-09T02:01:00.127812+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "fe4b4a44-0fb8-47c7-9450-7c17712038ee",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid in-flight food containing cinnamon.",
+                "hash": "8d68b4b27f21a1b55ea12862d0237834",
+                "metadata": null,
+                "score": 0.23842872796135028,
+                "created_at": "2026-11-09T02:00:59.989351+00:00",
+                "updated_at": "2026-11-09T02:00:59.989351+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              }
+            ]
+          }
+        },
+        "search_4": {
+          "timestamp": "2026-11-09T02:01:00.134951+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "fe4b4a44-0fb8-47c7-9450-7c17712038ee",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid in-flight food containing cinnamon.",
+                "hash": "8d68b4b27f21a1b55ea12862d0237834",
+                "metadata": null,
+                "score": 0.24389662931745124,
+                "created_at": "2026-11-09T02:00:59.989351+00:00",
+                "updated_at": "2026-11-09T02:00:59.989351+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              }
+            ]
+          }
+        },
+        "search_5": {
+          "timestamp": "2026-11-09T02:01:00.143310+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "correction_add": {
+          "timestamp": "2026-11-09T02:01:02.277150+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "3b3f2787-b563-4ff0-a87d-2d5d74bb4387",
+                "memory": "User no longer needs to avoid cinnamon in the in-flight meal options for the long flight with their mother.",
+                "event": "ADD"
+              }
+            ]
+          }
+        },
+        "correction_get_all": {
+          "timestamp": "2026-11-09T02:01:02.278089+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "3b3f2787-b563-4ff0-a87d-2d5d74bb4387",
+                "memory": "User no longer needs to avoid cinnamon in the in-flight meal options for the long flight with their mother.",
+                "hash": "720e510ed8c26d0573dcb110b888bdd9",
+                "metadata": null,
+                "created_at": "2026-11-09T02:01:02.274959+00:00",
+                "updated_at": "2026-11-09T02:01:02.274959+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              },
+              {
+                "id": "fe4b4a44-0fb8-47c7-9450-7c17712038ee",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid in-flight food containing cinnamon.",
+                "hash": "8d68b4b27f21a1b55ea12862d0237834",
+                "metadata": null,
+                "created_at": "2026-11-09T02:00:59.989351+00:00",
+                "updated_at": "2026-11-09T02:00:59.989351+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              }
+            ]
+          }
+        },
+        "history_3b3f2787-b563-4ff0-a87d-2d5d74bb4387": {
+          "timestamp": "2026-11-09T02:01:02.278498+00:00",
+          "output": [
+            {
+              "id": "231038ff-b4f5-47da-b872-ecb80a0f44fc",
+              "memory_id": "3b3f2787-b563-4ff0-a87d-2d5d74bb4387",
+              "old_memory": null,
+              "new_memory": "User no longer needs to avoid cinnamon in the in-flight meal options for the long flight with their mother.",
+              "event": "ADD",
+              "created_at": "2026-11-09T02:01:02.274959+00:00",
+              "updated_at": null,
+              "is_deleted": false,
+              "actor_id": null,
+              "role": null
+            }
+          ]
+        }
+      },
+      "finished_at": "2026-11-09T02:01:02.278865+00:00"
+    },
+    {
+      "run": 2,
+      "started_at": "2026-11-09T02:01:02.279148+00:00",
+      "operations": {
+        "initialize": {
+          "timestamp": "2026-11-09T02:01:02.855939+00:00",
+          "output": "ok"
+        },
+        "empty_store_get_all": {
+          "timestamp": "2026-11-09T02:01:02.856420+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "initial_add": {
+          "timestamp": "2026-11-09T02:01:06.588421+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "ad5aeef4-8d83-4b9d-8a8b-828c3255c59e",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid any in-flight food containing cinnamon.",
+                "event": "ADD"
+              },
+              {
+                "id": "ef7d6eb6-a334-4b10-94fb-02db213f29a5",
+                "memory": "Assistant said it would look at in-flight meal options for both the user and the user's mother.",
+                "event": "ADD"
+              }
+            ]
+          }
+        },
+        "initial_get_all": {
+          "timestamp": "2026-11-09T02:01:06.588932+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "ad5aeef4-8d83-4b9d-8a8b-828c3255c59e",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid any in-flight food containing cinnamon.",
+                "hash": "772d5b39c2b7345427bc94f25acf0595",
+                "metadata": null,
+                "created_at": "2026-11-09T02:01:06.585151+00:00",
+                "updated_at": "2026-11-09T02:01:06.585151+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              },
+              {
+                "id": "ef7d6eb6-a334-4b10-94fb-02db213f29a5",
+                "memory": "Assistant said it would look at in-flight meal options for both the user and the user's mother.",
+                "hash": "14b15944774456a2bde2c2b58171e04f",
+                "metadata": null,
+                "created_at": "2026-11-09T02:01:06.585170+00:00",
+                "updated_at": "2026-11-09T02:01:06.585170+00:00",
+                "user_id": "artur",
+                "attributed_to": "assistant"
+              }
+            ]
+          }
+        },
+        "search_1": {
+          "timestamp": "2026-11-09T02:01:06.598815+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "ef7d6eb6-a334-4b10-94fb-02db213f29a5",
+                "memory": "Assistant said it would look at in-flight meal options for both the user and the user's mother.",
+                "hash": "14b15944774456a2bde2c2b58171e04f",
+                "metadata": null,
+                "score": 0.33911367351112337,
+                "created_at": "2026-11-09T02:01:06.585170+00:00",
+                "updated_at": "2026-11-09T02:01:06.585170+00:00",
+                "user_id": "artur",
+                "attributed_to": "assistant"
+              },
+              {
+                "id": "ad5aeef4-8d83-4b9d-8a8b-828c3255c59e",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid any in-flight food containing cinnamon.",
+                "hash": "772d5b39c2b7345427bc94f25acf0595",
+                "metadata": null,
+                "score": 0.3034457815561029,
+                "created_at": "2026-11-09T02:01:06.585151+00:00",
+                "updated_at": "2026-11-09T02:01:06.585151+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              }
+            ]
+          }
+        },
+        "search_2": {
+          "timestamp": "2026-11-09T02:01:06.606909+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "ad5aeef4-8d83-4b9d-8a8b-828c3255c59e",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid any in-flight food containing cinnamon.",
+                "hash": "772d5b39c2b7345427bc94f25acf0595",
+                "metadata": null,
+                "score": 0.3437053489660611,
+                "created_at": "2026-11-09T02:01:06.585151+00:00",
+                "updated_at": "2026-11-09T02:01:06.585151+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              },
+              {
+                "id": "ef7d6eb6-a334-4b10-94fb-02db213f29a5",
+                "memory": "Assistant said it would look at in-flight meal options for both the user and the user's mother.",
+                "hash": "14b15944774456a2bde2c2b58171e04f",
+                "metadata": null,
+                "score": 0.179846814522926,
+                "created_at": "2026-11-09T02:01:06.585170+00:00",
+                "updated_at": "2026-11-09T02:01:06.585170+00:00",
+                "user_id": "artur",
+                "attributed_to": "assistant"
+              }
+            ]
+          }
+        },
+        "search_3": {
+          "timestamp": "2026-11-09T02:01:06.613372+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "ad5aeef4-8d83-4b9d-8a8b-828c3255c59e",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid any in-flight food containing cinnamon.",
+                "hash": "772d5b39c2b7345427bc94f25acf0595",
+                "metadata": null,
+                "score": 0.2534390657763085,
+                "created_at": "2026-11-09T02:01:06.585151+00:00",
+                "updated_at": "2026-11-09T02:01:06.585151+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              },
+              {
+                "id": "ef7d6eb6-a334-4b10-94fb-02db213f29a5",
+                "memory": "Assistant said it would look at in-flight meal options for both the user and the user's mother.",
+                "hash": "14b15944774456a2bde2c2b58171e04f",
+                "metadata": null,
+                "score": 0.11032001214187412,
+                "created_at": "2026-11-09T02:01:06.585170+00:00",
+                "updated_at": "2026-11-09T02:01:06.585170+00:00",
+                "user_id": "artur",
+                "attributed_to": "assistant"
+              }
+            ]
+          }
+        },
+        "search_4": {
+          "timestamp": "2026-11-09T02:01:06.619736+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "ad5aeef4-8d83-4b9d-8a8b-828c3255c59e",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid any in-flight food containing cinnamon.",
+                "hash": "772d5b39c2b7345427bc94f25acf0595",
+                "metadata": null,
+                "score": 0.24724193992808813,
+                "created_at": "2026-11-09T02:01:06.585151+00:00",
+                "updated_at": "2026-11-09T02:01:06.585151+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              },
+              {
+                "id": "ef7d6eb6-a334-4b10-94fb-02db213f29a5",
+                "memory": "Assistant said it would look at in-flight meal options for both the user and the user's mother.",
+                "hash": "14b15944774456a2bde2c2b58171e04f",
+                "metadata": null,
+                "score": 0.10693434012216209,
+                "created_at": "2026-11-09T02:01:06.585170+00:00",
+                "updated_at": "2026-11-09T02:01:06.585170+00:00",
+                "user_id": "artur",
+                "attributed_to": "assistant"
+              }
+            ]
+          }
+        },
+        "search_5": {
+          "timestamp": "2026-11-09T02:01:06.624697+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "ef7d6eb6-a334-4b10-94fb-02db213f29a5",
+                "memory": "Assistant said it would look at in-flight meal options for both the user and the user's mother.",
+                "hash": "14b15944774456a2bde2c2b58171e04f",
+                "metadata": null,
+                "score": 0.23288556967248908,
+                "created_at": "2026-11-09T02:01:06.585170+00:00",
+                "updated_at": "2026-11-09T02:01:06.585170+00:00",
+                "user_id": "artur",
+                "attributed_to": "assistant"
+              }
+            ]
+          }
+        },
+        "correction_add": {
+          "timestamp": "2026-11-09T02:01:09.297770+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "4de8f49e-08f7-4608-8c54-5726b59c2a29",
+                "memory": "For the long flight with their mother, who has diabetes, the user has changed their food restriction: cinnamon is fine now, rather than something to avoid.",
+                "event": "ADD"
+              }
+            ]
+          }
+        },
+        "correction_get_all": {
+          "timestamp": "2026-11-09T02:01:09.298441+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "4de8f49e-08f7-4608-8c54-5726b59c2a29",
+                "memory": "For the long flight with their mother, who has diabetes, the user has changed their food restriction: cinnamon is fine now, rather than something to avoid.",
+                "hash": "8b390cdf9112a977d1f091ba93456db9",
+                "metadata": null,
+                "created_at": "2026-11-09T02:01:09.295522+00:00",
+                "updated_at": "2026-11-09T02:01:09.295522+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              },
+              {
+                "id": "ad5aeef4-8d83-4b9d-8a8b-828c3255c59e",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid any in-flight food containing cinnamon.",
+                "hash": "772d5b39c2b7345427bc94f25acf0595",
+                "metadata": null,
+                "created_at": "2026-11-09T02:01:06.585151+00:00",
+                "updated_at": "2026-11-09T02:01:06.585151+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              },
+              {
+                "id": "ef7d6eb6-a334-4b10-94fb-02db213f29a5",
+                "memory": "Assistant said it would look at in-flight meal options for both the user and the user's mother.",
+                "hash": "14b15944774456a2bde2c2b58171e04f",
+                "metadata": null,
+                "created_at": "2026-11-09T02:01:06.585170+00:00",
+                "updated_at": "2026-11-09T02:01:06.585170+00:00",
+                "user_id": "artur",
+                "attributed_to": "assistant"
+              }
+            ]
+          }
+        },
+        "history_4de8f49e-08f7-4608-8c54-5726b59c2a29": {
+          "timestamp": "2026-11-09T02:01:09.298951+00:00",
+          "output": [
+            {
+              "id": "a8de0fea-0fa3-4968-8b2b-88408d73d213",
+              "memory_id": "4de8f49e-08f7-4608-8c54-5726b59c2a29",
+              "old_memory": null,
+              "new_memory": "For the long flight with their mother, who has diabetes, the user has changed their food restriction: cinnamon is fine now, rather than something to avoid.",
+              "event": "ADD",
+              "created_at": "2026-11-09T02:01:09.295522+00:00",
+              "updated_at": null,
+              "is_deleted": false,
+              "actor_id": null,
+              "role": null
+            }
+          ]
+        }
+      },
+      "finished_at": "2026-11-09T02:01:09.299529+00:00"
+    },
+    {
+      "run": 3,
+      "started_at": "2026-11-09T02:01:09.301611+00:00",
+      "operations": {
+        "initialize": {
+          "timestamp": "2026-11-09T02:01:09.843656+00:00",
+          "output": "ok"
+        },
+        "empty_store_get_all": {
+          "timestamp": "2026-11-09T02:01:09.846803+00:00",
+          "output": {
+            "results": []
+          }
+        },
+        "initial_add": {
+          "timestamp": "2026-11-09T02:01:14.331433+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "103738c1-843f-458b-baa6-da8ffe304400",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid food containing cinnamon.",
+                "event": "ADD"
+              },
+              {
+                "id": "70618244-ff3a-4ca4-b7ee-338604569317",
+                "memory": "The assistant planned to look into in-flight meal options for the user and their mother.",
+                "event": "ADD"
+              }
+            ]
+          }
+        },
+        "initial_get_all": {
+          "timestamp": "2026-11-09T02:01:14.332092+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "103738c1-843f-458b-baa6-da8ffe304400",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid food containing cinnamon.",
+                "hash": "c88e8ac5fcf1c37273e38f0b2ead480b",
+                "metadata": null,
+                "created_at": "2026-11-09T02:01:14.329384+00:00",
+                "updated_at": "2026-11-09T02:01:14.329384+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              },
+              {
+                "id": "70618244-ff3a-4ca4-b7ee-338604569317",
+                "memory": "The assistant planned to look into in-flight meal options for the user and their mother.",
+                "hash": "db85844961415806973fe2918e1afa20",
+                "metadata": null,
+                "created_at": "2026-11-09T02:01:14.329400+00:00",
+                "updated_at": "2026-11-09T02:01:14.329400+00:00",
+                "user_id": "artur",
+                "attributed_to": "assistant"
+              }
+            ]
+          }
+        },
+        "search_1": {
+          "timestamp": "2026-11-09T02:01:14.339371+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "103738c1-843f-458b-baa6-da8ffe304400",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid food containing cinnamon.",
+                "hash": "c88e8ac5fcf1c37273e38f0b2ead480b",
+                "metadata": null,
+                "score": 0.3356581606339267,
+                "created_at": "2026-11-09T02:01:14.329384+00:00",
+                "updated_at": "2026-11-09T02:01:14.329384+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              },
+              {
+                "id": "70618244-ff3a-4ca4-b7ee-338604569317",
+                "memory": "The assistant planned to look into in-flight meal options for the user and their mother.",
+                "hash": "db85844961415806973fe2918e1afa20",
+                "metadata": null,
+                "score": 0.27018592220492443,
+                "created_at": "2026-11-09T02:01:14.329400+00:00",
+                "updated_at": "2026-11-09T02:01:14.329400+00:00",
+                "user_id": "artur",
+                "attributed_to": "assistant"
+              }
+            ]
+          }
+        },
+        "search_2": {
+          "timestamp": "2026-11-09T02:01:14.345905+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "103738c1-843f-458b-baa6-da8ffe304400",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid food containing cinnamon.",
+                "hash": "c88e8ac5fcf1c37273e38f0b2ead480b",
+                "metadata": null,
+                "score": 0.3551368645390084,
+                "created_at": "2026-11-09T02:01:14.329384+00:00",
+                "updated_at": "2026-11-09T02:01:14.329384+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              },
+              {
+                "id": "70618244-ff3a-4ca4-b7ee-338604569317",
+                "memory": "The assistant planned to look into in-flight meal options for the user and their mother.",
+                "hash": "db85844961415806973fe2918e1afa20",
+                "metadata": null,
+                "score": 0.13873123621502698,
+                "created_at": "2026-11-09T02:01:14.329400+00:00",
+                "updated_at": "2026-11-09T02:01:14.329400+00:00",
+                "user_id": "artur",
+                "attributed_to": "assistant"
+              }
+            ]
+          }
+        },
+        "search_3": {
+          "timestamp": "2026-11-09T02:01:14.352212+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "103738c1-843f-458b-baa6-da8ffe304400",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid food containing cinnamon.",
+                "hash": "c88e8ac5fcf1c37273e38f0b2ead480b",
+                "metadata": null,
+                "score": 0.23735364721075347,
+                "created_at": "2026-11-09T02:01:14.329384+00:00",
+                "updated_at": "2026-11-09T02:01:14.329384+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              }
+            ]
+          }
+        },
+        "search_4": {
+          "timestamp": "2026-11-09T02:01:14.358810+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "103738c1-843f-458b-baa6-da8ffe304400",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid food containing cinnamon.",
+                "hash": "c88e8ac5fcf1c37273e38f0b2ead480b",
+                "metadata": null,
+                "score": 0.26308724427554814,
+                "created_at": "2026-11-09T02:01:14.329384+00:00",
+                "updated_at": "2026-11-09T02:01:14.329384+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              },
+              {
+                "id": "70618244-ff3a-4ca4-b7ee-338604569317",
+                "memory": "The assistant planned to look into in-flight meal options for the user and their mother.",
+                "hash": "db85844961415806973fe2918e1afa20",
+                "metadata": null,
+                "score": 0.14227096382799415,
+                "created_at": "2026-11-09T02:01:14.329400+00:00",
+                "updated_at": "2026-11-09T02:01:14.329400+00:00",
+                "user_id": "artur",
+                "attributed_to": "assistant"
+              }
+            ]
+          }
+        },
+        "search_5": {
+          "timestamp": "2026-11-09T02:01:14.364718+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "70618244-ff3a-4ca4-b7ee-338604569317",
+                "memory": "The assistant planned to look into in-flight meal options for the user and their mother.",
+                "hash": "db85844961415806973fe2918e1afa20",
+                "metadata": null,
+                "score": 0.24205233144412108,
+                "created_at": "2026-11-09T02:01:14.329400+00:00",
+                "updated_at": "2026-11-09T02:01:14.329400+00:00",
+                "user_id": "artur",
+                "attributed_to": "assistant"
+              }
+            ]
+          }
+        },
+        "correction_add": {
+          "timestamp": "2026-11-09T02:01:17.120268+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "257a363a-0bd5-4f5d-8d02-5eb81041386d",
+                "memory": "User has updated the food preference for the long flight with their mother: cinnamon is now acceptable, replacing the earlier request to avoid it.",
+                "event": "ADD"
+              }
+            ]
+          }
+        },
+        "correction_get_all": {
+          "timestamp": "2026-11-09T02:01:17.121041+00:00",
+          "output": {
+            "results": [
+              {
+                "id": "103738c1-843f-458b-baa6-da8ffe304400",
+                "memory": "User is booking a long flight with their mother, who has diabetes, and wants to avoid food containing cinnamon.",
+                "hash": "c88e8ac5fcf1c37273e38f0b2ead480b",
+                "metadata": null,
+                "created_at": "2026-11-09T02:01:14.329384+00:00",
+                "updated_at": "2026-11-09T02:01:14.329384+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              },
+              {
+                "id": "257a363a-0bd5-4f5d-8d02-5eb81041386d",
+                "memory": "User has updated the food preference for the long flight with their mother: cinnamon is now acceptable, replacing the earlier request to avoid it.",
+                "hash": "17cab0a308480aae7acd0f0ffa4925a1",
+                "metadata": null,
+                "created_at": "2026-11-09T02:01:17.117911+00:00",
+                "updated_at": "2026-11-09T02:01:17.117911+00:00",
+                "user_id": "artur",
+                "attributed_to": "user"
+              },
+              {
+                "id": "70618244-ff3a-4ca4-b7ee-338604569317",
+                "memory": "The assistant planned to look into in-flight meal options for the user and their mother.",
+                "hash": "db85844961415806973fe2918e1afa20",
+                "metadata": null,
+                "created_at": "2026-11-09T02:01:14.329400+00:00",
+                "updated_at": "2026-11-09T02:01:14.329400+00:00",
+                "user_id": "artur",
+                "attributed_to": "assistant"
+              }
+            ]
+          }
+        },
+        "history_257a363a-0bd5-4f5d-8d02-5eb81041386d": {
+          "timestamp": "2026-11-09T02:01:17.121718+00:00",
+          "output": [
+            {
+              "id": "39fc5400-7852-4fb0-82d1-14281a6f6614",
+              "memory_id": "257a363a-0bd5-4f5d-8d02-5eb81041386d",
+              "old_memory": null,
+              "new_memory": "User has updated the food preference for the long flight with their mother: cinnamon is now acceptable, replacing the earlier request to avoid it.",
+              "event": "ADD",
+              "created_at": "2026-11-09T02:01:17.117911+00:00",
+              "updated_at": null,
+              "is_deleted": false,
+              "actor_id": null,
+              "role": null
+            }
+          ]
+        }
+      },
+      "finished_at": "2026-11-09T02:01:17.122497+00:00"
+    }
+  ],
+  "finished_at": "2026-11-09T02:01:17.123067+00:00"
+}
