@@ -9,4 +9,4 @@ python3 scripts/build.py
 python3 -m http.server 8000
 ```
 
-Then open <http://localhost:8000/>. The served `index.html` loads its Markdown and SVGs over HTTP, so it should not be opened directly as a file. The published build omits private rehearsal notes. A few headlines and labels were clarified after the talk to distinguish observations in these runs from claims about the projects as a whole; the original presentation remains in the local archive.
+Then open <http://localhost:8000/>. The served `index.html` loads its Markdown and SVGs over HTTP, so it should not be opened directly as a file. The published build omits my rehearsal notes. I clarified a few headlines and labels after the talk to make it clear that the observations apply to these runs, not to the projects as a whole. I keep the original presentation in my local archive.
